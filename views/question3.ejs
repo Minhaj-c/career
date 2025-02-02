@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 3</title>
+</head>
+<body>
+    <h2>Question 3: What are your interests?</h2>
+    <form action="/api/auth/update-responses" method="POST">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input type="hidden" name="qualification" value="<%= qualification %>">
+        <input type="hidden" name="skills" value="<%= skills %>">
+        <label for="interests">Interests:</label>
+        <select name="interests" multiple>
+            <option value="" disabled>Select your interests</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="Data Science">Data Science</option>
+            <!-- Add more interests as needed -->
+        </select>
+        <button type="submit">Submit Responses</button>
+    </form>
+</body>
+</html>

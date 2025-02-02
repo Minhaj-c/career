@@ -52,18 +52,34 @@ app.get("/welcome/:userId", async (req, res) => {
   }
 });
 
-app.get("/questions/:userId", async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
-    res.render("questions", { userId: user._id });
-  } catch (error) {
-    console.error('Error fetching user or rendering questions page:', error.message);
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
+// Route for question 1
+app.get("/questions/:userId", (req, res) => {
+  const userId = req.params.userId;
+  res.render("question1", { userId });
+});
+
+// Handle question 1 response
+app.post("/question2", (req, res) => {
+  const { userId, qualification } = req.body;
+  res.render("question2", { userId, qualification });
+});
+
+// Route for question 2
+app.get("/question2", (req, res) => {
+  const { userId, qualification } = req.query;
+  res.render("question2", { userId, qualification });
+});
+
+// Handle question 2 response
+app.post("/question3", (req, res) => {
+  const { userId, qualification, skills } = req.body;
+  res.render("question3", { userId, qualification, skills });
+});
+
+// Route for question 3
+app.get("/question3", (req, res) => {
+  const { userId, qualification, skills } = req.query;
+  res.render("question3", { userId, qualification, skills });
 });
 
 app.get("/home/:userId", async (req, res) => {

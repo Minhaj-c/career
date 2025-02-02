@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 2</title>
+</head>
+<body>
+    <h2>Question 2: What are your skills?</h2>
+    <form action="/question3" method="POST">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input type="hidden" name="qualification" value="<%= qualification %>">
+        <label for="skills">Skills:</label>
+        <select name="skills" multiple required>
+            <option value="" disabled>Select your skills</option>
+            <option value="JavaScript">JavaScript</option>
+            <option value="Python">Python</option>
+            <option value="Java">Java</option>
+            <option value="React">React</option>
+            <!-- Add more skills as needed -->
+        </select>
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>
