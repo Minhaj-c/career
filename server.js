@@ -48,7 +48,10 @@ app.get("/welcome/:userId", async (req, res) => {
     }
     res.render("welcome", { username: user.username, userId: user._id });
   } catch (error) {
-    console.error("Error fetching user or rendering welcome page:", error.message);
+    console.error(
+      "Error fetching user or rendering welcome page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -106,7 +109,7 @@ app.post("/api/auth/update-responses", async (req, res) => {
         qualification,
         skills,
         interests,
-        hobbies
+        hobbies,
       },
       { new: true }
     );
@@ -149,26 +152,34 @@ app.get("/recommendations/:userId", async (req, res) => {
     }
 
     const userRecommendations = [];
-    const { qualification, skills, interests } = user;
+    const { qualification, skills, interests, hobbies } = user;
 
     skills.forEach((skill) => {
       interests.forEach((interest) => {
-        if (
-          recommendations[qualification] &&
-          recommendations[qualification][skill] &&
-          recommendations[qualification][skill][interest]
-        ) {
-          userRecommendations.push({
-            courses: recommendations[qualification][skill][interest].courses,
-            jobs: recommendations[qualification][skill][interest].jobs,
-          });
-        }
+        hobbies.forEach((hobby) => {
+          if (
+            recommendations[qualification] &&
+            recommendations[qualification][skill] &&
+            recommendations[qualification][skill][interest] &&
+            recommendations[qualification][skill][interest][hobby]
+          ) {
+            userRecommendations.push({
+              courses:
+                recommendations[qualification][skill][interest][hobby].courses,
+              jobs:
+                recommendations[qualification][skill][interest][hobby].jobs,
+            });
+          }
+        });
       });
     });
 
     res.render("recommendations", { user, userRecommendations });
   } catch (error) {
-    console.error("Error fetching user or rendering recommendations page:", error.message);
+    console.error(
+      "Error fetching user or rendering recommendations page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -201,9 +212,17 @@ app.get("/skills-qualifications/:userId", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    res.render("skills-qualifications", { user });
+    res.render("skills-qualifications", {
+      username: user.username,
+      userId: user._id,
+      qualification: user.qualification,
+      skills: user.skills,
+    });
   } catch (error) {
-    console.error("Error fetching user or rendering skills and qualifications page:", error.message);
+    console.error(
+      "Error fetching user or rendering skills-qualifications page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -221,7 +240,10 @@ app.get("/edit-profile/:userId", async (req, res) => {
       profilePic: user.profilePic,
     });
   } catch (error) {
-    console.error("Error fetching user or rendering edit profile page:", error.message);
+    console.error(
+      "Error fetching user or rendering edit profile page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
