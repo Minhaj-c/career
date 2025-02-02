@@ -12,22 +12,27 @@
 
     <main>
         <% if (userRecommendations.length > 0) { %>
-            <% userRecommendations.forEach(recommendation => { %>
-                <h2>Courses</h2>
-                <ul>
-                    <% recommendation.courses.forEach(course => { %>
-                        <li><%= course %></li>
-                    <% }) %>
-                </ul>
-                <h2>Job Opportunities</h2>
-                <ul>
-                    <% recommendation.jobs.forEach(job => { %>
-                        <li><%= job %></li>
-                    <% }) %>
-                </ul>
+            <% userRecommendations.forEach((recommendation, index) => { %>
+                <h2>Recommendation Set <%= index + 1 %></h2>
+                <% if (recommendation.courses && recommendation.courses.length > 0) { %>
+                    <h3>Courses</h3>
+                    <ul>
+                        <% recommendation.courses.forEach(course => { %>
+                            <li><%= course %></li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+                <% if (recommendation.jobs && recommendation.jobs.length > 0) { %>
+                    <h3>Job Opportunities</h3>
+                    <ul>
+                        <% recommendation.jobs.forEach(job => { %>
+                            <li><%= job %></li>
+                        <% }) %>
+                    </ul>
+                <% } %>
             <% }) %>
         <% } else { %>
-            <p>No recommendations found based on your current skills and qualifications.</p>
+            <p>No recommendations found based on your current skills, interests, and hobbies.</p>
         <% } %>
         <button onclick="window.location.href='/home/<%= user._id %>'">Go Back to Home</button>
     </main>

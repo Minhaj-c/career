@@ -163,12 +163,9 @@ app.get("/recommendations/:userId", async (req, res) => {
             recommendations[qualification][skill][interest] &&
             recommendations[qualification][skill][interest][hobby]
           ) {
-            userRecommendations.push({
-              courses:
-                recommendations[qualification][skill][interest][hobby].courses,
-              jobs:
-                recommendations[qualification][skill][interest][hobby].jobs,
-            });
+            userRecommendations.push(
+              ...recommendations[qualification][skill][interest][hobby]
+            );
           }
         });
       });
