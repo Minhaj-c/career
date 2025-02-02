@@ -154,22 +154,88 @@ app.get("/recommendations/:userId", async (req, res) => {
     const userRecommendations = [];
     const { qualification, skills, interests, hobbies } = user;
 
-    skills.forEach((skill) => {
-      interests.forEach((interest) => {
-        hobbies.forEach((hobby) => {
-          if (
-            recommendations[qualification] &&
-            recommendations[qualification][skill] &&
-            recommendations[qualification][skill][interest] &&
-            recommendations[qualification][skill][interest][hobby]
-          ) {
-            userRecommendations.push(
-              ...recommendations[qualification][skill][interest][hobby]
-            );
+    // If the user selects "Nothing" for all categories
+    if (qualification === "Nothing" && skills.includes("Nothing") && interests.includes("Nothing") && hobbies.includes("Nothing")) {
+      for (const qual in recommendations) {
+        for (const skill in recommendations[qual]) {
+          for (const interest in recommendations[qual][skill]) {
+            for (const hobby in recommendations[qual][skill][interest]) {
+              userRecommendations.push(...recommendations[qual][skill][interest][hobby]);
+            }
           }
-        });
+        }
+      }
+    } else {
+      skills.forEach((skill) => {
+        if (skill !== "Nothing") {
+          if (interests.includes("Nothing") && hobbies.includes("Nothing")) {
+            // Recommend based on skills only if interests and hobbies are "Nothing"
+            for (const qual in recommendations) {
+              if (recommendations[qual][skill]) {
+                for (const interest in recommendations[qual][skill]) {
+                  for (const hobby in recommendations[qual][skill][interest]) {
+                    userRecommendations.push(...recommendations[qual][skill][interest][hobby]);
+                  }
+                }
+              }
+            }
+          } else {
+            interests.forEach((interest) => {
+              if (interest !== "Nothing") {
+                hobbies.forEach((hobby) => {
+                  if (hobby !== "Nothing") {
+                    if (
+                      recommendations[qualification] &&
+                      recommendations[qualification][skill] &&
+                      recommendations[qualification][skill][interest] &&
+                      recommendations[qualification][skill][interest][hobby]
+                    ) {
+                      userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                    }
+                  } else {
+                    // Recommend based on skills and interests if hobbies are "Nothing"
+                    if (
+                      recommendations[qualification] &&
+                      recommendations[qualification][skill] &&
+                      recommendations[qualification][skill][interest]
+                    ) {
+                      for (const hobby in recommendations[qualification][skill][interest]) {
+                        userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                      }
+                    }
+                  }
+                });
+              } else {
+                // Recommend based on skills and hobbies if interests are "Nothing"
+                hobbies.forEach((hobby) => {
+                  if (
+                    recommendations[qualification] &&
+                    recommendations[qualification][skill]
+                  ) {
+                    for (const interest in recommendations[qualification][skill]) {
+                      if (recommendations[qualification][skill][interest][hobby]) {
+                        userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                      }
+                    }
+                  }
+                });
+              }
+            });
+          }
+        } else {
+          // Recommend based on qualification only if skills are "Nothing"
+          if (recommendations[qualification]) {
+            for (const skill in recommendations[qualification]) {
+              for (const interest in recommendations[qualification][skill]) {
+                for (const hobby in recommendations[qualification][skill][interest]) {
+                  userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                }
+              }
+            }
+          }
+        }
       });
-    });
+    }
 
     res.render("recommendations", { user, userRecommendations });
   } catch (error) {
