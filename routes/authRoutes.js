@@ -70,7 +70,9 @@ router.post("/login", async (req, res) => {
 
 // Handle user responses
 router.post("/update-responses", async (req, res) => {
-  const { userId, qualification, skills, interests } = req.body;
+  const { userId, qualification, skills, interests, hobbies } = req.body;
+
+  //console.log("Received data:", req.body); // Debugging line
 
   try {
     const updatedUser = await User.findByIdAndUpdate(
@@ -79,6 +81,7 @@ router.post("/update-responses", async (req, res) => {
         qualification,
         skills,
         interests,
+        hobbies,
       },
       { new: true }
     );
@@ -87,10 +90,12 @@ router.post("/update-responses", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
+    //console.log("Updated user:", updatedUser); // Debugging line
+
     res.redirect(`/home/${updatedUser._id}`);
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error updating user responses:", error.message); // Updated error message
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 

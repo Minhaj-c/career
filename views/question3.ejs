@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>Question 3: What are your interests?</h2>
-    <form action="/api/auth/update-responses" method="POST">
+    <form action="/question4" method="POST">
         <input type="hidden" name="userId" value="<%= userId %>">
         <input type="hidden" name="qualification" value="<%= qualification %>">
         <input type="hidden" name="skills" value="<%= skills %>">
@@ -19,7 +19,7 @@
             <option value="Data Science">Data Science</option>
             <!-- Add more interests as needed -->
         </select>
-        <button type="submit">Submit Responses</button>
+        <button type="submit">next</button>
     </form>
 </body>
 </html>

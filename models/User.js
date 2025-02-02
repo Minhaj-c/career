@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema(
     },
     interests: {
       type: [String],  // Array of interests (optional)
+    },
+    hobbies: {
+      type: [String],
     }
   },
   { timestamps: true }

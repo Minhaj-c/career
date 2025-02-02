@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question 4</title>
+</head>
+<body>
+    <h2>Question 4: What are your hobbies?</h2>
+    <form action="/api/auth/update-responses" method="POST">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input type="hidden" name="qualification" value="<%= qualification %>">
+        <input type="hidden" name="skills" value="<%= skills %>">
+        <input type="hidden" name="interests" value="<%= interests %>">
+        <label for="hobbies">Hobbies:</label>
+        <select name="hobbies" multiple required>
+            <option value="" disabled>Select your hobbies</option>
+            <option value="Reading">Reading</option>
+            <option value="Gaming">Gaming</option>
+            <option value="Traveling">Traveling</option>
+            <option value="Cooking">Cooking</option>
+            <option value="Sports">Sports</option>
+            <option value="Music">Music</option>
+            <!-- Add more hobbies as needed -->
+        </select>
+        <button type="submit">Submit Responses</button>
+    </form>
+</body>
+</html>
