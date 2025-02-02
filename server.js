@@ -111,6 +111,20 @@ app.get("/dashboard/:userId", async (req, res) => {
   }
 });
 
+app.get("/skills-qualifications/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render("skills-qualifications", { user });
+  } catch (error) {
+    console.error('Error fetching user or rendering skills and qualifications page:', error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 app.get("/edit-profile/:userId", async (req, res) => {
   const { userId } = req.params;
   try {

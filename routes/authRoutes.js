@@ -8,11 +8,11 @@ const router = express.Router();
 // Multer storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
+    cb(null, Date.now() + "-" + file.originalname);
+  },
 });
 
 const upload = multer({ storage });
@@ -34,7 +34,7 @@ router.post("/signup", upload.single("profilePic"), async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      profilePic
+      profilePic,
     });
 
     await newUser.save();
@@ -78,7 +78,7 @@ router.post("/update-responses", async (req, res) => {
       {
         qualification,
         skills,
-        interests
+        interests,
       },
       { new: true }
     );
@@ -95,21 +95,47 @@ router.post("/update-responses", async (req, res) => {
 });
 
 // Handle profile updates (only username and profile picture)
-router.post("/update-profile", upload.single("profilePic"), async (req, res) => {
-  const { userId, username } = req.body;
-  const profilePic = req.file ? req.file.filename : null;
+router.post(
+  "/update-profile",
+  upload.single("profilePic"),
+  async (req, res) => {
+    const { userId, username } = req.body;
+    const profilePic = req.file ? req.file.filename : null;
+
+    try {
+      const updatedFields = { username };
+      if (profilePic) updatedFields.profilePic = profilePic;
+
+      const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, {
+        new: true,
+      });
+
+      if (!updatedUser) {
+        return res.status(400).json({ message: "User not found" });
+      }
+
+      res.redirect(`/dashboard/${updatedUser._id}`);
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+);
+
+// Route to render the user's skills and qualifications page
+router.get("/skills-qualifications/:userId", async (req, res) => {
+  const userId = req.params.userId;
 
   try {
-    const updatedFields = { username };
-    if (profilePic) updatedFields.profilePic = profilePic;
+    // Fetch the user by their ID
+    const user = await User.findById(userId);
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
-
-    if (!updatedUser) {
+    if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
-    res.redirect(`/dashboard/${updatedUser._id}`);
+    // Render the skills-qualifications page and pass user data
+    res.render("skills-qualifications", { user }); // Pass user object to the view
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Server error" });

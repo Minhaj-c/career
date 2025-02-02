@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills and Qualifications</title>
+</head>
+<body>
+    <header>
+        <h1><%= user.username %>'s Skills & Qualifications</h1>
+    </header>
+
+    <main>
+        <p>User ID: <%= user._id %></p>
+        <p>Qualification: <%= user.qualification %></p>
+        <p>Skills: <%= user.skills.join(', ') %></p>
+        <button onclick="window.location.href='/dashboard/<%= user._id %>'">Go Back to Dashboard</button>
+    </main>
+</body>
+</html>
