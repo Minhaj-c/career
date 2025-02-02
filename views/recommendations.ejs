@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+</head>
+<body>
+    <header>
+        <h1>Recommended for You, <%= user.username %></h1>
+    </header>
+
+    <main>
+        <% if (userRecommendations.length > 0) { %>
+            <% userRecommendations.forEach(recommendation => { %>
+                <h2>Courses</h2>
+                <ul>
+                    <% recommendation.courses.forEach(course => { %>
+                        <li><%= course %></li>
+                    <% }) %>
+                </ul>
+                <h2>Job Opportunities</h2>
+                <ul>
+                    <% recommendation.jobs.forEach(job => { %>
+                        <li><%= job %></li>
+                    <% }) %>
+                </ul>
+            <% }) %>
+        <% } else { %>
+            <p>No recommendations found based on your current skills and qualifications.</p>
+        <% } %>
+        <button onclick="window.location.href='/home/<%= user._id %>'">Go Back to Home</button>
+    </main>
+</body>
+</html>

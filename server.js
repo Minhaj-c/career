@@ -7,6 +7,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import User from "./models/User.js";
 import fs from "fs";
+import {recommendations} from "./models/recommendations.js";
 
 dotenv.config();
 connectDB();
@@ -47,7 +48,10 @@ app.get("/welcome/:userId", async (req, res) => {
     }
     res.render("welcome", { username: user.username, userId: user._id });
   } catch (error) {
-    console.error('Error fetching user or rendering welcome page:', error.message);
+    console.error(
+      "Error fetching user or rendering welcome page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -89,9 +93,49 @@ app.get("/home/:userId", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    res.render("home", { username: user.username, userId: user._id, profilePic: user.profilePic });
+    res.render("home", {
+      username: user.username,
+      userId: user._id,
+      profilePic: user.profilePic,
+    });
   } catch (error) {
-    console.error('Error fetching user or rendering home page:', error.message);
+    console.error("Error fetching user or rendering home page:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.get("/recommendations/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const userRecommendations = [];
+    const { qualification, skills, interests } = user;
+
+    skills.forEach((skill) => {
+      interests.forEach((interest) => {
+        if (
+          recommendations[qualification] &&
+          recommendations[qualification][skill] &&
+          recommendations[qualification][skill][interest]
+        ) {
+          userRecommendations.push({
+            courses: recommendations[qualification][skill][interest].courses,
+            jobs: recommendations[qualification][skill][interest].jobs,
+          });
+        }
+      });
+    });
+
+    res.render("recommendations", { user, userRecommendations });
+  } catch (error) {
+    console.error(
+      "Error fetching user or rendering recommendations page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -100,13 +144,19 @@ app.get("/dashboard/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
-    const users = await User.find();  // Fetch all users
+    const users = await User.find(); // Fetch all users
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    res.render("dashboard", { username: user.username, userId: user._id, email: user.email, profilePic: user.profilePic, users });
+    res.render("dashboard", {
+      username: user.username,
+      userId: user._id,
+      email: user.email,
+      profilePic: user.profilePic,
+      users,
+    });
   } catch (error) {
-    console.error('Error fetching user or rendering dashboard:', error.message);
+    console.error("Error fetching user or rendering dashboard:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -120,7 +170,10 @@ app.get("/skills-qualifications/:userId", async (req, res) => {
     }
     res.render("skills-qualifications", { user });
   } catch (error) {
-    console.error('Error fetching user or rendering skills and qualifications page:', error.message);
+    console.error(
+      "Error fetching user or rendering skills and qualifications page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -132,9 +185,16 @@ app.get("/edit-profile/:userId", async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    res.render("edit-profile", { userId: user._id, username: user.username, profilePic: user.profilePic });
+    res.render("edit-profile", {
+      userId: user._id,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
   } catch (error) {
-    console.error('Error fetching user or rendering edit profile page:', error.message);
+    console.error(
+      "Error fetching user or rendering edit profile page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
