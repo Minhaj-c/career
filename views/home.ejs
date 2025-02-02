@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <header>
+        <img src="/uploads/<%= profilePic %>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;" onclick="window.location.href='/dashboard/<%= userId %>'">
+        <h1>Welcome, <%= username %>!</h1>
+    </header>
+
+    <main>
+        <button onclick="window.location.href='/recommendations/<%= userId %>'">Recommended for You</button>
+    </main>
+</body>
+</html>
