@@ -5,6 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import User from "./models/User.js"; // Make sure to import the User model
 import fs from "fs";
 
 dotenv.config();
@@ -37,9 +38,39 @@ app.get("/", (req, res) => {
 
 // Auth routes
 app.use("/api/auth", authRoutes);
-// Serve the login page at "/login"
+
+// Render the login page at "/login"
 app.get("/login", (req, res) => {
   res.render("login");
+});
+
+// Render the welcome page with user data
+app.get("/welcome/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render("welcome", { username: user.username, userId: user._id });
+  } catch (error) {
+    console.error('Error fetching user or rendering welcome page:', error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.get("/questions/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render("questions", { userId: user._id });
+  } catch (error) {
+    console.error('Error fetching user or rendering questions page:', error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
