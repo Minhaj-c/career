@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+</head>
+<body>
+    <header>
+        <h1>Edit Profile</h1>
+    </header>
+
+    <main>
+        <form action="/api/auth/update-profile" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="userId" value="<%= userId %>">
+            <label for="username">Username:</label>
+            <input type="text" name="username" value="<%= username %>" required>
+            <label for="profilePic">Profile Picture:</label>
+            <input type="file" name="profilePic">
+            <button type="submit">Update Profile</button>
+        </form>
+    </main>
+</body>
+</html>

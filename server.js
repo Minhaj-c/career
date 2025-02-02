@@ -84,14 +84,35 @@ app.get("/dashboard/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await User.findById(userId);
+    const users = await User.find();  // Fetch all users
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    res.render("dashboard", { username: user.username, userId: user._id, email: user.email, profilePic: user.profilePic });
+    res.render("dashboard", { username: user.username, userId: user._id, email: user.email, profilePic: user.profilePic, users });
   } catch (error) {
     console.error('Error fetching user or rendering dashboard:', error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
+});
+
+app.get("/edit-profile/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render("edit-profile", { userId: user._id, username: user.username, profilePic: user.profilePic });
+  } catch (error) {
+    console.error('Error fetching user or rendering edit profile page:', error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Handle logout
+app.get("/logout", (req, res) => {
+  // Clear session or any authentication tokens
+  res.redirect("/login");
 });
 
 const PORT = process.env.PORT || 5000;

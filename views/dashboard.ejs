@@ -9,11 +9,15 @@
     <header>
         <img src="/uploads/<%= profilePic %>" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%;">
         <h1>Dashboard - <%= username %></h1>
+        <a href="/logout">Logout</a>
     </header>
 
     <main>
         <p>Email: <%= email %></p>
-        <!-- Add more user information here -->
+        <p>Username: <%= username %></p>
+      
+        <h3>Edit Profile</h3>
+        <button onclick="window.location.href='/edit-profile/<%= userId %>'">Go to Edit Profile</button>
     </main>
 </body>
 </html>

@@ -94,4 +94,26 @@ router.post("/update-responses", async (req, res) => {
   }
 });
 
+// Handle profile updates (only username and profile picture)
+router.post("/update-profile", upload.single("profilePic"), async (req, res) => {
+  const { userId, username } = req.body;
+  const profilePic = req.file ? req.file.filename : null;
+
+  try {
+    const updatedFields = { username };
+    if (profilePic) updatedFields.profilePic = profilePic;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
+
+    if (!updatedUser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.redirect(`/dashboard/${updatedUser._id}`);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;
