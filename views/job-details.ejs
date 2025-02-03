@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details</title>
+</head>
+<body>
+    <header>
+        <h1>Job Details for <%= job %></h1>
+    </header>
+
+    <main>
+        <% if (jobDetails) { %>
+            <% if (jobDetails.courses && jobDetails.courses.length > 0) { %>
+                <h3>Courses</h3>
+                <ul>
+                    <% jobDetails.courses.forEach(course => { %>
+                        <li><%= course %></li>
+                    <% }) %>
+                </ul>
+            <% } %>
+            <% if (jobDetails.jobs && jobDetails.jobs.length > 0) { %>
+                <h3>Job Opportunities</h3>
+                <ul>
+                    <% jobDetails.jobs.forEach(job => { %>
+                        <li><%= job %></li>
+                    <% }) %>
+                </ul>
+            <% } %>
+        <% } else { %>
+            <p>No details found for this job.</p>
+        <% } %>
+        <button onclick="window.location.href='/recommendations'">Back to Recommendations</button>
+    </main>
+</body>
+</html>

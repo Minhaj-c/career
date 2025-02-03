@@ -246,6 +246,29 @@ app.get("/recommendations/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+app.get('/job-details/:job', (req, res) => {
+  const job = decodeURIComponent(req.params.job);
+  let jobDetails = null;
+
+  // Find the job details in your recommendations object
+  for (const level in recommendations) {
+    for (const skill in recommendations[level]) {
+      for (const field in recommendations[level][skill]) {
+        for (const interest in recommendations[level][skill][field]) {
+          const recommendation = recommendations[level][skill][field][interest];
+          recommendation.forEach(rec => {
+            if (rec.jobs.includes(job)) {
+              jobDetails = rec;
+            }
+          });
+        }
+      }
+    }
+  }
+
+  res.render('job-details', { job, jobDetails });
+});
+
 
 app.get("/dashboard/:userId", async (req, res) => {
   const { userId } = req.params;
