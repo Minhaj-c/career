@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Skills & Qualifications</title>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1><%= user.username %>'s Skills & Qualifications</h1>
+      <h1><%= user.username %>'s Skills & Qualifications</h1>
     </header>
 
     <main>
-        <p><strong>Qualification:</strong> <%= user.qualification %></p>
-        <p><strong>Skills:</strong> <%= user.skills.join(', ') %></p>
-        <p><strong>Interests:</strong> <%= user.interests.join(', ') %></p>
-        <p><strong>Hobbies:</strong> <%= user.hobbies.join(', ') %></p>
-        <button onclick="window.location.href='/edit-skills-qualifications/<%= user._id %>'">Edit</button>
+      <p><strong>Qualification:</strong> <%= user.qualification %></p>
+      <p><strong>Skills:</strong> <%= user.skills.join(', ') %></p>
+      <p><strong>Interests:</strong> <%= user.interests.join(', ') %></p>
+      <p><strong>Hobbies:</strong> <%= user.hobbies.join(', ') %></p>
+      <button
+        onclick="window.location.href='/edit-skills-qualifications/<%= user._id %>'"
+      >
+        Edit
+      </button>
+
+      <button onclick="window.location.href='/dashboard/<%= user._id %>'">
+        Go Back to Dashboard
+      </button>
     </main>
-</body>
+  </body>
 </html>
