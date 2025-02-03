@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question 3</title>
     <style>
-      .multiselect {
+        .multiselect {
             width: 200px;
             position: relative;
             display: inline-block;
@@ -41,11 +41,21 @@
         .multiselect .checkboxes label:hover {
             background-color: #f1f1f1;
         }
+        .error-message {
+            color: red;
+            display: none;
+            border: 1px solid red;
+            background-color: #f8d7da;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <h2>Question 3: What are your interests?</h2>
-    <form action="/question4" method="POST">
+    <form action="/question4" method="POST" onsubmit="return validateCheckboxes()">
         <input type="hidden" name="userId" value="<%= userId %>">
         <input type="hidden" name="qualification" value="<%= qualification %>">
         <input type="hidden" name="skills" value="<%= skills %>">
@@ -53,7 +63,7 @@
         <div class="multiselect">
             <div class="selectBox" onclick="showCheckboxes()">
                 <select>
-                    <option>Select your interests</option>
+                    <option value="">Select your interests</option>
                 </select>
                 <div class="overSelect"></div>
             </div>
@@ -66,6 +76,7 @@
                 <label><input type="checkbox" name="interests" value="Cloud Computing"> Cloud Computing</label>
                 <!-- Add more interests as needed -->
             </div>
+            <div id="error-message" class="error-message">Please select at least one interest.</div>
         </div>
         <button type="submit">Next</button>
     </form>
@@ -80,7 +91,19 @@
             }
         }
 
-      
+        function validateCheckboxes() {
+            var checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
+            var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+            var errorMessage = document.getElementById("error-message");
+            
+            if (!checkedOne) {
+                errorMessage.style.display = "block";
+            } else {
+                errorMessage.style.display = "none";
+            }
+            
+            return checkedOne;
+        }
     </script>
 </body>
 </html>

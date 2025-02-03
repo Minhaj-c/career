@@ -1,132 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question 4</title>
     <style>
-      .multiselect {
-        width: 200px;
-        position: relative;
-        display: inline-block;
-      }
-      .multiselect .selectBox {
-        position: relative;
-      }
-      .multiselect .selectBox select {
-        width: 100%;
-        height: 35px;
-        font-size: 14px;
-        cursor: pointer;
-      }
-      .multiselect .overSelect {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-      .multiselect .checkboxes {
-        display: none;
-        border: 1px #dadada solid;
-        position: absolute;
-        background-color: white;
-        z-index: 1;
-        max-height: 200px;
-        overflow-y: auto;
-      }
-      .multiselect .checkboxes label {
-        display: block;
-      }
-      .multiselect .checkboxes label:hover {
-        background-color: #f1f1f1;
-      }
+        .multiselect {
+            width: 200px;
+            position: relative;
+            display: inline-block;
+        }
+        .multiselect .selectBox {
+            position: relative;
+        }
+        .multiselect .selectBox select {
+            width: 100%;
+            height: 35px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .multiselect .overSelect {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        .multiselect .checkboxes {
+            display: none;
+            border: 1px #dadada solid;
+            position: absolute;
+            background-color: white;
+            z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .multiselect .checkboxes label {
+            display: block;
+        }
+        .multiselect .checkboxes label:hover {
+            background-color: #f1f1f1;
+        }
+        .error-message {
+            color: red;
+            display: none;
+            border: 1px solid red;
+            background-color: #f8d7da;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <h2>Question 4: What are your hobbies?</h2>
-    <form action="/api/auth/update-responses" method="POST">
-      <input type="hidden" name="userId" value="<%= userId %>" />
-      <input type="hidden" name="qualification" value="<%= qualification %>" />
-      <input type="hidden" name="skills" value="<%= skills %>" />
-      <input type="hidden" name="interests" value="<%= interests %>" />
-      <label for="hobbies">Hobbies:</label>
-      <div class="multiselect">
-        <div class="selectBox" onclick="showCheckboxes()">
-          <select>
-            <option>Select your interests</option>
-          </select>
-          <div class="overSelect"></div>
+    <form action="/api/auth/update-responses" method="POST" onsubmit="return validateCheckboxes()">
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input type="hidden" name="qualification" value="<%= qualification %>">
+        <input type="hidden" name="skills" value="<%= skills %>">
+        <input type="hidden" name="interests" value="<%= interests %>">
+        <label for="hobbies">Hobbies:</label>
+        <div class="multiselect">
+            <div class="selectBox" onclick="showCheckboxes()">
+                <select>
+                    <option value="">Select your interests</option>
+                </select>
+                <div class="overSelect"></div>
+            </div>
+            <div id="checkboxes" class="checkboxes">
+                <label><input type="checkbox" name="hobbies" value="Reading"> Reading</label>
+                <label><input type="checkbox" name="hobbies" value="Gaming"> Gaming</label>
+                <label><input type="checkbox" name="hobbies" value="Traveling"> Traveling</label>
+                <label><input type="checkbox" name="hobbies" value="Cooking"> Cooking</label>
+                <label><input type="checkbox" name="hobbies" value="Sports"> Sports</label>
+                <label><input type="checkbox" name="hobbies" value="Music"> Music</label>
+                <label><input type="checkbox" name="hobbies" value="Art"> Art</label>
+                <label><input type="checkbox" name="hobbies" value="Photography"> Photography</label>
+                <label><input type="checkbox" name="hobbies" value="Nothing"> Nothing</label>
+                <!-- Add more hobbies as needed -->
+            </div>
+            <div id="error-message" class="error-message">Please select at least one hobby.</div>
         </div>
-        <div id="checkboxes" class="checkboxes">
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Reading"
-            />Reading</label
-          >
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Gaming"
-            />Gaming</label
-          >
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Traveling"
-            />Traveling</label
-          >
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Cooking"
-            />Cooking</label
-          >
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Sports"
-            />Sports</label
-          >
-          <label
-            ><input type="checkbox" name="hobbies" value="Music" />Music</label
-          >
-          <label><input type="checkbox" name="hobbies" value="Art" />Art</label>
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Photography"
-            />Photography</label
-          >
-          <label
-            ><input
-              type="checkbox"
-              name="hobbies"
-              value="Nothing"
-            />Nothing</label
-          >
-          <!-- Add more hobbies as needed -->
-        </div>
-      </div>
-      <button type="submit">Submit Responses</button>
+        <button type="submit">Submit Responses</button>
     </form>
 
     <script>
-      function showCheckboxes() {
-        var checkboxes = document.getElementById("checkboxes");
-        if (checkboxes.style.display === "block") {
-          checkboxes.style.display = "none";
-        } else {
-          checkboxes.style.display = "block";
+        function showCheckboxes() {
+            var checkboxes = document.getElementById("checkboxes");
+            if (checkboxes.style.display === "block") {
+                checkboxes.style.display = "none";
+            } else {
+                checkboxes.style.display = "block";
+            }
         }
-      }
+
+        function validateCheckboxes() {
+            var checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
+            var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+            var errorMessage = document.getElementById("error-message");
+            
+            if (!checkedOne) {
+                errorMessage.style.display = "block";
+            } else {
+                errorMessage.style.display = "none";
+            }
+            
+            return checkedOne;
+        }
     </script>
-  </body>
+</body>
 </html>
