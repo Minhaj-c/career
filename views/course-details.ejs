@@ -29,7 +29,13 @@
         <% } else { %>
             <p>No details found for this course.</p>
         <% } %>
-        <button onclick="window.location.href='/job-details/<%= encodeURIComponent(previousJob) %>'">Back to Job Details</button>
+
+        <!-- Updated Back Button -->
+        <% if (previousJob) { %>
+            <button onclick="window.location.href='/job-details/<%= previousJob %>'">Back to Job Details</button>
+        <% } else { %>
+            <button onclick="window.location.href='/recommendations'">Back to Recommendations</button>
+        <% } %>
     </main>
 </body>
 </html>

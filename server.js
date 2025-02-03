@@ -272,6 +272,12 @@ app.get('/job-details/:job', (req, res) => {
 app.get('/course-details/:course', (req, res) => {
   const course = decodeURIComponent(req.params.course);
   let courseDetails = null;
+  let previousJob = null;
+
+  // Extract the previous job from the referrer (if available)
+  if (req.headers.referer && req.headers.referer.includes('/job-details/')) {
+      previousJob = req.headers.referer.split('/job-details/')[1];
+  }
 
   // Find the course details in your recommendations object
   for (const level in recommendations) {
@@ -293,8 +299,9 @@ app.get('/course-details/:course', (req, res) => {
       }
   }
 
-  res.render('course-details', { course, courseDetails, previousJob: req.headers.referer.split('/').pop() });
+  res.render('course-details', { course, courseDetails, previousJob });
 });
+
 
 
 app.get("/dashboard/:userId", async (req, res) => {
