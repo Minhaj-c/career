@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+</head>
+<body>
+    <header>
+        <h1>Course Details for <%= course %></h1>
+    </header>
+
+    <main>
+        <% if (courseDetails) { %>
+            <h3>Course Description</h3>
+            <p><%= courseDetails.description %></p>
+            <h3>Modules</h3>
+            <ul>
+                <% courseDetails.modules.forEach(module => { %>
+                    <li><%= module %></li>
+                <% }) %>
+            </ul>
+            <h3>Job Opportunities</h3>
+            <ul>
+                <% courseDetails.jobs.forEach(job => { %>
+                    <li><%= job %></li>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No details found for this course.</p>
+        <% } %>
+        <button onclick="window.location.href='/job-details/<%= encodeURIComponent(previousJob) %>'">Back to Job Details</button>
+    </main>
+</body>
+</html>

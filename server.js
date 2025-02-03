@@ -252,21 +252,48 @@ app.get('/job-details/:job', (req, res) => {
 
   // Find the job details in your recommendations object
   for (const level in recommendations) {
-    for (const skill in recommendations[level]) {
-      for (const field in recommendations[level][skill]) {
-        for (const interest in recommendations[level][skill][field]) {
-          const recommendation = recommendations[level][skill][field][interest];
-          recommendation.forEach(rec => {
-            if (rec.jobs.includes(job)) {
-              jobDetails = rec;
-            }
-          });
-        }
+      for (const skill in recommendations[level]) {
+          for (const field in recommendations[level][skill]) {
+              for (const interest in recommendations[level][skill][field]) {
+                  const recommendation = recommendations[level][skill][field][interest];
+                  recommendation.forEach(rec => {
+                      if (rec.jobs.includes(job)) {
+                          jobDetails = rec;
+                      }
+                  });
+              }
+          }
       }
-    }
   }
 
   res.render('job-details', { job, jobDetails });
+});
+
+app.get('/course-details/:course', (req, res) => {
+  const course = decodeURIComponent(req.params.course);
+  let courseDetails = null;
+
+  // Find the course details in your recommendations object
+  for (const level in recommendations) {
+      for (const skill in recommendations[level]) {
+          for (const field in recommendations[level][skill]) {
+              for (const interest in recommendations[level][skill][field]) {
+                  const recommendation = recommendations[level][skill][field][interest];
+                  recommendation.forEach(rec => {
+                      if (rec.courses.includes(course)) {
+                          courseDetails = {
+                              description: `Description for ${course}`, // Replace with actual description
+                              modules: [`Module 1 of ${course}`, `Module 2 of ${course}`], // Replace with actual modules
+                              jobs: rec.jobs
+                          };
+                      }
+                  });
+              }
+          }
+      }
+  }
+
+  res.render('course-details', { course, courseDetails, previousJob: req.headers.referer.split('/').pop() });
 });
 
 

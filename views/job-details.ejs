@@ -16,7 +16,7 @@
                 <h3>Courses</h3>
                 <ul>
                     <% jobDetails.courses.forEach(course => { %>
-                        <li><%= course %></li>
+                        <li><a href="/course-details/<%= encodeURIComponent(course) %>"><%= course %></a></li>
                     <% }) %>
                 </ul>
             <% } %>
