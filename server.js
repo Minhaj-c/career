@@ -276,10 +276,13 @@ app.get("/skills-qualifications/:userId", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
     res.render("skills-qualifications", {
+      user, // Pass the user object to the template
       username: user.username,
       userId: user._id,
       qualification: user.qualification,
       skills: user.skills,
+      interests: user.interests,
+      hobbies: user.hobbies
     });
   } catch (error) {
     console.error(
@@ -289,6 +292,8 @@ app.get("/skills-qualifications/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+
 
 app.get("/edit-profile/:userId", async (req, res) => {
   const { userId } = req.params;

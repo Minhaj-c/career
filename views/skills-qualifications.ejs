@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skills and Qualifications</title>
+    <title>Skills & Qualifications</title>
 </head>
 <body>
     <header>
@@ -11,10 +11,10 @@
     </header>
 
     <main>
-        <p>User ID: <%= user._id %></p>
-        <p>Qualification: <%= user.qualification %></p>
-        <p>Skills: <%= user.skills.join(', ') %></p>
-        <button onclick="window.location.href='/dashboard/<%= user._id %>'">Go Back to Dashboard</button>
+        <p><strong>Qualification:</strong> <%= user.qualification %></p>
+        <p><strong>Skills:</strong> <%= user.skills.join(', ') %></p>
+        <p><strong>Interests:</strong> <%= user.interests.join(', ') %></p>
+        <p><strong>Hobbies:</strong> <%= user.hobbies.join(', ') %></p>
     </main>
 </body>
 </html>
