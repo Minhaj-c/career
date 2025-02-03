@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question 3</title>
+    <style>
+      .multiselect {
+            width: 200px;
+            position: relative;
+            display: inline-block;
+        }
+        .multiselect .selectBox {
+            position: relative;
+        }
+        .multiselect .selectBox select {
+            width: 100%;
+            height: 35px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .multiselect .overSelect {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        .multiselect .checkboxes {
+            display: none;
+            border: 1px #dadada solid;
+            position: absolute;
+            background-color: white;
+            z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .multiselect .checkboxes label {
+            display: block;
+        }
+        .multiselect .checkboxes label:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
     <h2>Question 3: What are your interests?</h2>
@@ -12,15 +50,37 @@
         <input type="hidden" name="qualification" value="<%= qualification %>">
         <input type="hidden" name="skills" value="<%= skills %>">
         <label for="interests">Interests:</label>
-        <select name="interests" multiple required>
-            <option value="" disabled>Select your interests</option>
-            <option value="Web Development">Web Development</option>
-            <option value="Machine Learning">Machine Learning</option>
-            <option value="Data Science">Data Science</option>
-            <option value="Nothing">Nothing</option>
-            <!-- Add more interests as needed -->
-        </select>
-        <button type="submit">next</button>
+        <div class="multiselect">
+            <div class="selectBox" onclick="showCheckboxes()">
+                <select>
+                    <option>Select your interests</option>
+                </select>
+                <div class="overSelect"></div>
+            </div>
+            <div id="checkboxes" class="checkboxes">
+                <label><input type="checkbox" name="interests" value="Web Development"> Web Development</label>
+                <label><input type="checkbox" name="interests" value="Machine Learning"> Machine Learning</label>
+                <label><input type="checkbox" name="interests" value="Data Science"> Data Science</label>
+                <label><input type="checkbox" name="interests" value="Artificial Intelligence"> Artificial Intelligence</label>
+                <label><input type="checkbox" name="interests" value="Cybersecurity"> Cybersecurity</label>
+                <label><input type="checkbox" name="interests" value="Cloud Computing"> Cloud Computing</label>
+                <!-- Add more interests as needed -->
+            </div>
+        </div>
+        <button type="submit">Next</button>
     </form>
+
+    <script>
+        function showCheckboxes() {
+            var checkboxes = document.getElementById("checkboxes");
+            if (checkboxes.style.display === "block") {
+                checkboxes.style.display = "none";
+            } else {
+                checkboxes.style.display = "block";
+            }
+        }
+
+      
+    </script>
 </body>
 </html>

@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question 2</title>
+    <style>
+        .multiselect {
+            width: 200px;
+            position: relative;
+            display: inline-block;
+        }
+        .multiselect .selectBox {
+            position: relative;
+        }
+        .multiselect .selectBox select {
+            width: 100%;
+            height: 35px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .multiselect .overSelect {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        .multiselect .checkboxes {
+            display: none;
+            border: 1px #dadada solid;
+            position: absolute;
+            background-color: white;
+            z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .multiselect .checkboxes label {
+            display: block;
+        }
+        .multiselect .checkboxes label:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
     <h2>Question 2: What are your skills?</h2>
@@ -11,16 +49,34 @@
         <input type="hidden" name="userId" value="<%= userId %>">
         <input type="hidden" name="qualification" value="<%= qualification %>">
         <label for="skills">Skills:</label>
-        <select name="skills" multiple required>
-            <option value="" disabled>Select your skills</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="Python">Python</option>
-            <option value="Java">Java</option>
-            <option value="React">React</option>
-            <option value="Nothing">Nothing</option>
-            <!-- Add more skills as needed -->
-        </select>
+        <div class="multiselect">
+            <div class="selectBox" onclick="showCheckboxes()">
+                <select>
+                    <option>Select your skills</option>
+                </select>
+                <div class="overSelect"></div>
+            </div>
+            <div id="checkboxes" class="checkboxes">
+                <label for="skill1"><input type="checkbox" id="skill1" name="skills" value="JavaScript"> JavaScript</label>
+                <label for="skill2"><input type="checkbox" id="skill2" name="skills" value="Python"> Python</label>
+                <label for="skill3"><input type="checkbox" id="skill3" name="skills" value="Java"> Java</label>
+                <label for="skill4"><input type="checkbox" id="skill4" name="skills" value="React"> React</label>
+                <label for="skill5"><input type="checkbox" id="skill5" name="skills" value="Nothing"> Nothing</label>
+                <!-- Add more skills as needed -->
+            </div>
+        </div>
         <button type="submit">Next</button>
     </form>
+
+    <script>
+        function showCheckboxes() {
+            var checkboxes = document.getElementById("checkboxes");
+            if (checkboxes.style.display === "block") {
+                checkboxes.style.display = "none";
+            } else {
+                checkboxes.style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
