@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Skills & Qualifications</title>
+    <style>
+        .multiselect {
+            width: 200px;
+            position: relative;
+            display: inline-block;
+        }
+        .multiselect .selectBox {
+            position: relative;
+        }
+        .multiselect .selectBox select {
+            width: 100%;
+            height: 35px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .multiselect .overSelect {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+        .multiselect .checkboxes {
+            display: none;
+            border: 1px #dadada solid;
+            position: absolute;
+            background-color: white;
+            z-index: 1;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .multiselect .checkboxes label {
+            display: block;
+        }
+        .multiselect .checkboxes label:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,32 +51,71 @@
     <main>
         <form action="/update-skills-qualifications" method="POST">
             <input type="hidden" name="userId" value="<%= user._id %>">
+
             <label for="skills">Skills:</label>
-            <select name="skills" required multiple>
-                <option value="JavaScript" <%= user.skills.includes("JavaScript") ? "selected" : "" %>>JavaScript</option>
-                <option value="Python" <%= user.skills.includes("Python") ? "selected" : "" %>>Python</option>
-                <option value="Java" <%= user.skills.includes("Java") ? "selected" : "" %>>Java</option>
-                <option value="Nothing">Nothing</option>
-            </select>
+            <div class="multiselect">
+                <div class="selectBox" onclick="showCheckboxes('skills')">
+                    <select>
+                        <option>Select skills</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
+                <div id="skills" class="checkboxes">
+                    <label for="skill1"><input type="checkbox" id="skill1" name="skills" value="JavaScript" <%= user.skills.includes("JavaScript") ? "checked" : "" %>> JavaScript</label>
+                    <label for="skill2"><input type="checkbox" id="skill2" name="skills" value="Python" <%= user.skills.includes("Python") ? "checked" : "" %>> Python</label>
+                    <label for="skill3"><input type="checkbox" id="skill3" name="skills" value="Java" <%= user.skills.includes("Java") ? "checked" : "" %>> Java</label>
+                    <label for="skill4"><input type="checkbox" id="skill4" name="skills" value="Nothing" <%= user.skills.includes("Nothing") ? "checked" : "" %>> Nothing</label>
+                </div>
+            </div>
             <br>
+
             <label for="interests">Interests:</label>
-            <select name="interests" required multiple>
-                <option value="Web Development" <%= user.interests.includes("Web Development") ? "selected" : "" %>>Web Development</option>
-                <option value="Data Science" <%= user.interests.includes("Data Science") ? "selected" : "" %>>Data Science</option>
-                <option value="Machine Learning" <%= user.interests.includes("Machine Learning") ? "selected" : "" %>>Machine Learning</option>
-                <option value="Nothing">Nothing</option>
-            </select>
+            <div class="multiselect">
+                <div class="selectBox" onclick="showCheckboxes('interests')">
+                    <select>
+                        <option>Select interests</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
+                <div id="interests" class="checkboxes">
+                    <label for="interest1"><input type="checkbox" id="interest1" name="interests" value="Web Development" <%= user.interests.includes("Web Development") ? "checked" : "" %>> Web Development</label>
+                    <label for="interest2"><input type="checkbox" id="interest2" name="interests" value="Data Science" <%= user.interests.includes("Data Science") ? "checked" : "" %>> Data Science</label>
+                    <label for="interest3"><input type="checkbox" id="interest3" name="interests" value="Machine Learning" <%= user.interests.includes("Machine Learning") ? "checked" : "" %>> Machine Learning</label>
+                    <label for="interest4"><input type="checkbox" id="interest4" name="interests" value="Nothing" <%= user.interests.includes("Nothing") ? "checked" : "" %>> Nothing</label>
+                </div>
+            </div>
             <br>
+
             <label for="hobbies">Hobbies:</label>
-            <select name="hobbies" required multiple>
-                <option value="Gaming" <%= user.hobbies.includes("Gaming") ? "selected" : "" %>>Gaming</option>
-                <option value="Reading" <%= user.hobbies.includes("Reading") ? "selected" : "" %>>Reading</option>
-                <option value="Traveling" <%= user.hobbies.includes("Traveling") ? "selected" : "" %>>Traveling</option>
-                <option value="Nothing">Nothing</option>
-            </select>
+            <div class="multiselect">
+                <div class="selectBox" onclick="showCheckboxes('hobbies')">
+                    <select>
+                        <option>Select hobbies</option>
+                    </select>
+                    <div class="overSelect"></div>
+                </div>
+                <div id="hobbies" class="checkboxes">
+                    <label for="hobby1"><input type="checkbox" id="hobby1" name="hobbies" value="Gaming" <%= user.hobbies.includes("Gaming") ? "checked" : "" %>> Gaming</label>
+                    <label for="hobby2"><input type="checkbox" id="hobby2" name="hobbies" value="Reading" <%= user.hobbies.includes("Reading") ? "checked" : "" %>> Reading</label>
+                    <label for="hobby3"><input type="checkbox" id="hobby3" name="hobbies" value="Traveling" <%= user.hobbies.includes("Traveling") ? "checked" : "" %>> Traveling</label>
+                    <label for="hobby4"><input type="checkbox" id="hobby4" name="hobbies" value="Nothing" <%= user.hobbies.includes("Nothing") ? "checked" : "" %>> Nothing</label>
+                </div>
+            </div>
             <br>
-            <button type="submit">Save</button>
+
+            <button type="submit" class="btn btn-primary">Save</button>
         </form>
     </main>
+
+    <script>
+        function showCheckboxes(id) {
+            var checkboxes = document.getElementById(id);
+            if (checkboxes.style.display === "block") {
+                checkboxes.style.display = "none";
+            } else {
+                checkboxes.style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
