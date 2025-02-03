@@ -15,6 +15,7 @@
         <p><strong>Skills:</strong> <%= user.skills.join(', ') %></p>
         <p><strong>Interests:</strong> <%= user.interests.join(', ') %></p>
         <p><strong>Hobbies:</strong> <%= user.hobbies.join(', ') %></p>
+        <button onclick="window.location.href='/edit-skills-qualifications/<%= user._id %>'">Edit</button>
     </main>
 </body>
 </html>

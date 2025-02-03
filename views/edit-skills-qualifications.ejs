@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Skills & Qualifications</title>
+</head>
+<body>
+    <header>
+        <h1>Edit <%= user.username %>'s Skills & Qualifications</h1>
+    </header>
+
+    <main>
+        <form action="/update-skills-qualifications" method="POST">
+            <input type="hidden" name="userId" value="<%= user._id %>">
+            <label for="skills">Skills:</label>
+            <select name="skills" required multiple>
+                <option value="JavaScript" <%= user.skills.includes("JavaScript") ? "selected" : "" %>>JavaScript</option>
+                <option value="Python" <%= user.skills.includes("Python") ? "selected" : "" %>>Python</option>
+                <option value="Java" <%= user.skills.includes("Java") ? "selected" : "" %>>Java</option>
+                <option value="Nothing">Nothing</option>
+            </select>
+            <br>
+            <label for="interests">Interests:</label>
+            <select name="interests" required multiple>
+                <option value="Web Development" <%= user.interests.includes("Web Development") ? "selected" : "" %>>Web Development</option>
+                <option value="Data Science" <%= user.interests.includes("Data Science") ? "selected" : "" %>>Data Science</option>
+                <option value="Machine Learning" <%= user.interests.includes("Machine Learning") ? "selected" : "" %>>Machine Learning</option>
+                <option value="Nothing">Nothing</option>
+            </select>
+            <br>
+            <label for="hobbies">Hobbies:</label>
+            <select name="hobbies" required multiple>
+                <option value="Gaming" <%= user.hobbies.includes("Gaming") ? "selected" : "" %>>Gaming</option>
+                <option value="Reading" <%= user.hobbies.includes("Reading") ? "selected" : "" %>>Reading</option>
+                <option value="Traveling" <%= user.hobbies.includes("Traveling") ? "selected" : "" %>>Traveling</option>
+                <option value="Nothing">Nothing</option>
+            </select>
+            <br>
+            <button type="submit">Save</button>
+        </form>
+    </main>
+</body>
+</html>

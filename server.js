@@ -293,6 +293,48 @@ app.get("/skills-qualifications/:userId", async (req, res) => {
   }
 });
 
+app.get("/edit-skills-qualifications/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render("edit-skills-qualifications", { user });
+  } catch (error) {
+    console.error(
+      "Error fetching user or rendering edit-skills-qualifications page:",
+      error.message
+    );
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.post("/update-skills-qualifications", async (req, res) => {
+  const { userId, skills, interests, hobbies } = req.body;
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        skills: Array.isArray(skills) ? skills : [skills],
+        interests: Array.isArray(interests) ? interests : [interests],
+        hobbies: Array.isArray(hobbies) ? hobbies : [hobbies]
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    res.redirect(`/skills-qualifications/${updatedUser._id}`);
+  } catch (error) {
+    console.error("Error updating user skills, interests, and hobbies:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 
 
 app.get("/edit-profile/:userId", async (req, res) => {
