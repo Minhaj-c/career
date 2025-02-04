@@ -310,25 +310,19 @@ app.get("/job-details/:job", async (req, res) => {
   }
 });
 
-app.get("/job-full-details/:job", async (req, res) => {
+app.get('/job-full-details/:job', async (req, res) => {
   const job = decodeURIComponent(req.params.job);
   const userId = req.query.userId;
   let fullJobDetails = null;
 
-  // Fetch the full job details from your data structure (replace with your actual logic)
   for (const level in recommendations) {
     for (const skill in recommendations[level]) {
       for (const field in recommendations[level][skill]) {
         for (const interest in recommendations[level][skill][field]) {
           const recommendation = recommendations[level][skill][field][interest];
-          recommendation.forEach((rec) => {
-            if (rec.jobs.includes(job)) {
-              fullJobDetails = {
-                job: rec.jobs.find((j) => j === job),
-                salary: rec.salary, // Example field
-                dutyTime: rec.dutyTime, // Example field
-                description: rec.description, // Example field
-              };
+          recommendation.forEach(rec => {
+            if (rec.details && rec.details[job]) {
+              fullJobDetails = rec.details[job];
             }
           });
         }
@@ -342,20 +336,13 @@ app.get("/job-full-details/:job", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    if (!fullJobDetails) {
-      return res.render("job-full-details", {
-        job,
-        fullJobDetails: null,
-        user,
-      });
-    }
-
-    res.render("job-full-details", { job, fullJobDetails, user });
+    res.render('job-full-details', { job, fullJobDetails, user });
   } catch (error) {
     console.error("Error fetching job details:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
 
 app.get("/course-details/:course", (req, res) => {
   const course = decodeURIComponent(req.params.course);
