@@ -151,10 +151,10 @@ app.get("/recommendations/:userId", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    const userRecommendations = [];
+    const userRecommendations = new Set(); // Use a Set to avoid duplicates
     const { qualification, skills, interests, hobbies } = user;
 
-    // If the user selects "Nothing" for all categories
+    // If the user selects "Nothing" for all categories, show all recommendations
     if (
       qualification === "Nothing" &&
       skills.includes("Nothing") &&
@@ -165,101 +165,73 @@ app.get("/recommendations/:userId", async (req, res) => {
         for (const skill in recommendations[qual]) {
           for (const interest in recommendations[qual][skill]) {
             for (const hobby in recommendations[qual][skill][interest]) {
-              userRecommendations.push(
-                ...recommendations[qual][skill][interest][hobby]
-              );
+              recommendations[qual][skill][interest][hobby].forEach((rec) => {
+                userRecommendations.add(JSON.stringify(rec));
+              });
             }
           }
         }
       }
     } else {
+      // Handle multiple selections for skills, interests, and hobbies
       skills.forEach((skill) => {
         if (skill !== "Nothing") {
-          if (interests.includes("Nothing") && hobbies.includes("Nothing")) {
-            // Recommend based on skills only if interests and hobbies are "Nothing"
-            for (const qual in recommendations) {
-              if (recommendations[qual][skill]) {
-                for (const interest in recommendations[qual][skill]) {
-                  for (const hobby in recommendations[qual][skill][interest]) {
-                    userRecommendations.push(
-                      ...recommendations[qual][skill][interest][hobby]
-                    );
-                  }
-                }
-              }
-            }
-          } else {
-            interests.forEach((interest) => {
-              if (interest !== "Nothing") {
-                hobbies.forEach((hobby) => {
-                  if (hobby !== "Nothing") {
-                    if (
-                      recommendations[qualification] &&
-                      recommendations[qualification][skill] &&
-                      recommendations[qualification][skill][interest] &&
-                      recommendations[qualification][skill][interest][hobby]
-                    ) {
-                      userRecommendations.push(
-                        ...recommendations[qualification][skill][interest][
-                          hobby
-                        ]
-                      );
-                    }
-                  } else {
-                    // Recommend based on skills and interests if hobbies are "Nothing"
-                    if (
-                      recommendations[qualification] &&
-                      recommendations[qualification][skill] &&
-                      recommendations[qualification][skill][interest]
-                    ) {
-                      for (const hobby in recommendations[qualification][skill][
-                        interest
-                      ]) {
-                        userRecommendations.push(
-                          ...recommendations[qualification][skill][interest][
-                            hobby
-                          ]
-                        );
-                      }
-                    }
-                  }
-                });
-              } else {
-                // Recommend based on skills and hobbies if interests are "Nothing"
-                hobbies.forEach((hobby) => {
+          interests.forEach((interest) => {
+            if (interest !== "Nothing") {
+              hobbies.forEach((hobby) => {
+                if (hobby !== "Nothing") {
                   if (
                     recommendations[qualification] &&
-                    recommendations[qualification][skill]
+                    recommendations[qualification][skill] &&
+                    recommendations[qualification][skill][interest] &&
+                    recommendations[qualification][skill][interest][hobby]
                   ) {
-                    for (const interest in recommendations[qualification][
-                      skill
-                    ]) {
-                      if (
-                        recommendations[qualification][skill][interest][hobby]
-                      ) {
-                        userRecommendations.push(
-                          ...recommendations[qualification][skill][interest][
-                            hobby
-                          ]
-                        );
-                      }
+                    recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                      userRecommendations.add(JSON.stringify(rec));
+                    });
+                  }
+                } else {
+                  // Recommend based on skills and interests if hobbies are "Nothing"
+                  if (
+                    recommendations[qualification] &&
+                    recommendations[qualification][skill] &&
+                    recommendations[qualification][skill][interest]
+                  ) {
+                    for (const hobby in recommendations[qualification][skill][interest]) {
+                      recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                        userRecommendations.add(JSON.stringify(rec));
+                      });
                     }
                   }
-                });
-              }
-            });
-          }
+                }
+              });
+            } else {
+              // Recommend based on skills and hobbies if interests are "Nothing"
+              hobbies.forEach((hobby) => {
+                if (
+                  recommendations[qualification] &&
+                  recommendations[qualification][skill]
+                ) {
+                  for (const interest in recommendations[qualification][skill]) {
+                    if (recommendations[qualification][skill][interest][hobby]) {
+                      recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                        userRecommendations.add(JSON.stringify(rec));
+                      });
+                    }
+                  }
+                }
+              });
+            }
+          });
         } else {
           // Recommend based on qualification only if skills are "Nothing"
           if (recommendations[qualification]) {
             for (const skill in recommendations[qualification]) {
               for (const interest in recommendations[qualification][skill]) {
-                for (const hobby in recommendations[qualification][skill][
-                  interest
-                ]) {
-                  userRecommendations.push(
-                    ...recommendations[qualification][skill][interest][hobby]
-                  );
+                for (const hobby in recommendations[qualification][skill][interest]) {
+                  recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                    userRecommendations.add(JSON.stringify(rec));
+                  });
                 }
               }
             }
@@ -268,15 +240,18 @@ app.get("/recommendations/:userId", async (req, res) => {
       });
     }
 
-    res.render("recommendations", { user, userRecommendations });
-  } catch (error) {
-    console.error(
-      "Error fetching user or rendering recommendations page:",
-      error.message
+    const uniqueRecommendations = Array.from(userRecommendations).map((rec) =>
+      JSON.parse(rec)
     );
+
+    res.render("recommendations", { user, userRecommendations: uniqueRecommendations });
+  } catch (error) {
+    console.error("Error fetching user or rendering recommendations page:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+
 app.get("/job-details/:job", async (req, res) => {
   const job = decodeURIComponent(req.params.job);
   const userId = req.query.userId;
