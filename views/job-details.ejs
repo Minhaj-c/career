@@ -31,7 +31,7 @@
         <% } else { %>
             <p>No details found for this job.</p>
         <% } %>
-        <button onclick="window.location.href='/recommendations'">Back to Recommendations</button>
+        <button onclick="window.location.href='/recommendations/<%= user._id %>'">Back to Recommendations</button>
     </main>
 </body>
 </html>

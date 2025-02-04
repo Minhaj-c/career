@@ -18,7 +18,7 @@
                     <h3>Job Opportunities</h3>
                     <ul>
                         <% recommendation.jobs.forEach(job => { %>
-                            <li><a href="/job-details/<%= encodeURIComponent(job) %>"><%= job %></a></li>
+                            <li><a href="/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>"><%= job %></a></li>
                         <% }) %>
                     </ul>
                 <% } %>

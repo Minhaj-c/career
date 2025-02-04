@@ -246,28 +246,39 @@ app.get("/recommendations/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-app.get('/job-details/:job', (req, res) => {
+app.get('/job-details/:job', async (req, res) => {
   const job = decodeURIComponent(req.params.job);
+  const userId = req.query.userId;
   let jobDetails = null;
 
   // Find the job details in your recommendations object
   for (const level in recommendations) {
-      for (const skill in recommendations[level]) {
-          for (const field in recommendations[level][skill]) {
-              for (const interest in recommendations[level][skill][field]) {
-                  const recommendation = recommendations[level][skill][field][interest];
-                  recommendation.forEach(rec => {
-                      if (rec.jobs.includes(job)) {
-                          jobDetails = rec;
-                      }
-                  });
-              }
-          }
+    for (const skill in recommendations[level]) {
+      for (const field in recommendations[level][skill]) {
+        for (const interest in recommendations[level][skill][field]) {
+          const recommendation = recommendations[level][skill][field][interest];
+          recommendation.forEach(rec => {
+            if (rec.jobs.includes(job)) {
+              jobDetails = rec;
+            }
+          });
+        }
       }
+    }
   }
 
-  res.render('job-details', { job, jobDetails });
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render('job-details', { job, jobDetails, user });
+  } catch (error) {
+    console.error("Error fetching user:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
+
 
 app.get('/course-details/:course', (req, res) => {
   const course = decodeURIComponent(req.params.course);
