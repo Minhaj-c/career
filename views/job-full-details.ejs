@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Full Details</title>
+</head>
+<body>
+  <header>
+    <h1>Full Details for <%= job %></h1>
+  </header>
+  
+  <main>
+    <% if (fullJobDetails) { %>
+      <p><strong>Salary:</strong> <%= fullJobDetails.salary %></p>
+      <p><strong>Duty Time:</strong> <%= fullJobDetails.dutyTime %></p>
+      <p><strong>Description:</strong> <%= fullJobDetails.description %></p>
+    <% } else { %>
+      <p>No detailed information available for this job.</p>
+    <% } %>
+    
+    <button onclick="window.location.href='/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>'">Back to Job Details</button>
+  </main>
+</body>
+</html>

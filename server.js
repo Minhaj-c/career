@@ -155,12 +155,19 @@ app.get("/recommendations/:userId", async (req, res) => {
     const { qualification, skills, interests, hobbies } = user;
 
     // If the user selects "Nothing" for all categories
-    if (qualification === "Nothing" && skills.includes("Nothing") && interests.includes("Nothing") && hobbies.includes("Nothing")) {
+    if (
+      qualification === "Nothing" &&
+      skills.includes("Nothing") &&
+      interests.includes("Nothing") &&
+      hobbies.includes("Nothing")
+    ) {
       for (const qual in recommendations) {
         for (const skill in recommendations[qual]) {
           for (const interest in recommendations[qual][skill]) {
             for (const hobby in recommendations[qual][skill][interest]) {
-              userRecommendations.push(...recommendations[qual][skill][interest][hobby]);
+              userRecommendations.push(
+                ...recommendations[qual][skill][interest][hobby]
+              );
             }
           }
         }
@@ -174,7 +181,9 @@ app.get("/recommendations/:userId", async (req, res) => {
               if (recommendations[qual][skill]) {
                 for (const interest in recommendations[qual][skill]) {
                   for (const hobby in recommendations[qual][skill][interest]) {
-                    userRecommendations.push(...recommendations[qual][skill][interest][hobby]);
+                    userRecommendations.push(
+                      ...recommendations[qual][skill][interest][hobby]
+                    );
                   }
                 }
               }
@@ -190,7 +199,11 @@ app.get("/recommendations/:userId", async (req, res) => {
                       recommendations[qualification][skill][interest] &&
                       recommendations[qualification][skill][interest][hobby]
                     ) {
-                      userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                      userRecommendations.push(
+                        ...recommendations[qualification][skill][interest][
+                          hobby
+                        ]
+                      );
                     }
                   } else {
                     // Recommend based on skills and interests if hobbies are "Nothing"
@@ -199,8 +212,14 @@ app.get("/recommendations/:userId", async (req, res) => {
                       recommendations[qualification][skill] &&
                       recommendations[qualification][skill][interest]
                     ) {
-                      for (const hobby in recommendations[qualification][skill][interest]) {
-                        userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                      for (const hobby in recommendations[qualification][skill][
+                        interest
+                      ]) {
+                        userRecommendations.push(
+                          ...recommendations[qualification][skill][interest][
+                            hobby
+                          ]
+                        );
                       }
                     }
                   }
@@ -212,9 +231,17 @@ app.get("/recommendations/:userId", async (req, res) => {
                     recommendations[qualification] &&
                     recommendations[qualification][skill]
                   ) {
-                    for (const interest in recommendations[qualification][skill]) {
-                      if (recommendations[qualification][skill][interest][hobby]) {
-                        userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                    for (const interest in recommendations[qualification][
+                      skill
+                    ]) {
+                      if (
+                        recommendations[qualification][skill][interest][hobby]
+                      ) {
+                        userRecommendations.push(
+                          ...recommendations[qualification][skill][interest][
+                            hobby
+                          ]
+                        );
                       }
                     }
                   }
@@ -227,8 +254,12 @@ app.get("/recommendations/:userId", async (req, res) => {
           if (recommendations[qualification]) {
             for (const skill in recommendations[qualification]) {
               for (const interest in recommendations[qualification][skill]) {
-                for (const hobby in recommendations[qualification][skill][interest]) {
-                  userRecommendations.push(...recommendations[qualification][skill][interest][hobby]);
+                for (const hobby in recommendations[qualification][skill][
+                  interest
+                ]) {
+                  userRecommendations.push(
+                    ...recommendations[qualification][skill][interest][hobby]
+                  );
                 }
               }
             }
@@ -246,7 +277,7 @@ app.get("/recommendations/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-app.get('/job-details/:job', async (req, res) => {
+app.get("/job-details/:job", async (req, res) => {
   const job = decodeURIComponent(req.params.job);
   const userId = req.query.userId;
   let jobDetails = null;
@@ -257,7 +288,7 @@ app.get('/job-details/:job', async (req, res) => {
       for (const field in recommendations[level][skill]) {
         for (const interest in recommendations[level][skill][field]) {
           const recommendation = recommendations[level][skill][field][interest];
-          recommendation.forEach(rec => {
+          recommendation.forEach((rec) => {
             if (rec.jobs.includes(job)) {
               jobDetails = rec;
             }
@@ -272,48 +303,92 @@ app.get('/job-details/:job', async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
-    res.render('job-details', { job, jobDetails, user });
+    res.render("job-details", { job, jobDetails, user });
   } catch (error) {
     console.error("Error fetching user:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
+app.get("/job-full-details/:job", async (req, res) => {
+  const job = decodeURIComponent(req.params.job);
+  const userId = req.query.userId;
+  let fullJobDetails = null;
 
-app.get('/course-details/:course', (req, res) => {
+  // Fetch the full job details from your data structure (replace with your actual logic)
+  for (const level in recommendations) {
+    for (const skill in recommendations[level]) {
+      for (const field in recommendations[level][skill]) {
+        for (const interest in recommendations[level][skill][field]) {
+          const recommendation = recommendations[level][skill][field][interest];
+          recommendation.forEach((rec) => {
+            if (rec.jobs.includes(job)) {
+              fullJobDetails = {
+                job: rec.jobs.find((j) => j === job),
+                salary: rec.salary, // Example field
+                dutyTime: rec.dutyTime, // Example field
+                description: rec.description, // Example field
+              };
+            }
+          });
+        }
+      }
+    }
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!fullJobDetails) {
+      return res.render("job-full-details", {
+        job,
+        fullJobDetails: null,
+        user,
+      });
+    }
+
+    res.render("job-full-details", { job, fullJobDetails, user });
+  } catch (error) {
+    console.error("Error fetching job details:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.get("/course-details/:course", (req, res) => {
   const course = decodeURIComponent(req.params.course);
   let courseDetails = null;
   let previousJob = null;
 
   // Extract the previous job from the referrer (if available)
-  if (req.headers.referer && req.headers.referer.includes('/job-details/')) {
-      previousJob = req.headers.referer.split('/job-details/')[1];
+  if (req.headers.referer && req.headers.referer.includes("/job-details/")) {
+    previousJob = req.headers.referer.split("/job-details/")[1];
   }
 
   // Find the course details in your recommendations object
   for (const level in recommendations) {
-      for (const skill in recommendations[level]) {
-          for (const field in recommendations[level][skill]) {
-              for (const interest in recommendations[level][skill][field]) {
-                  const recommendation = recommendations[level][skill][field][interest];
-                  recommendation.forEach(rec => {
-                      if (rec.courses.includes(course)) {
-                          courseDetails = {
-                              description: `Description for ${course}`, // Replace with actual description
-                              modules: [`Module 1 of ${course}`, `Module 2 of ${course}`], // Replace with actual modules
-                              jobs: rec.jobs
-                          };
-                      }
-                  });
-              }
-          }
+    for (const skill in recommendations[level]) {
+      for (const field in recommendations[level][skill]) {
+        for (const interest in recommendations[level][skill][field]) {
+          const recommendation = recommendations[level][skill][field][interest];
+          recommendation.forEach((rec) => {
+            if (rec.courses.includes(course)) {
+              courseDetails = {
+                description: `Description for ${course}`, // Replace with actual description
+                modules: [`Module 1 of ${course}`, `Module 2 of ${course}`], // Replace with actual modules
+                jobs: rec.jobs,
+              };
+            }
+          });
+        }
       }
+    }
   }
 
-  res.render('course-details', { course, courseDetails, previousJob });
+  res.render("course-details", { course, courseDetails, previousJob });
 });
-
-
 
 app.get("/dashboard/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -350,7 +425,7 @@ app.get("/skills-qualifications/:userId", async (req, res) => {
       qualification: user.qualification,
       skills: user.skills,
       interests: user.interests,
-      hobbies: user.hobbies
+      hobbies: user.hobbies,
     });
   } catch (error) {
     console.error(
@@ -387,7 +462,7 @@ app.post("/update-skills-qualifications", async (req, res) => {
       {
         skills: Array.isArray(skills) ? skills : [skills],
         interests: Array.isArray(interests) ? interests : [interests],
-        hobbies: Array.isArray(hobbies) ? hobbies : [hobbies]
+        hobbies: Array.isArray(hobbies) ? hobbies : [hobbies],
       },
       { new: true }
     );
@@ -398,12 +473,13 @@ app.post("/update-skills-qualifications", async (req, res) => {
 
     res.redirect(`/skills-qualifications/${updatedUser._id}`);
   } catch (error) {
-    console.error("Error updating user skills, interests, and hobbies:", error.message);
+    console.error(
+      "Error updating user skills, interests, and hobbies:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
-
 
 app.get("/edit-profile/:userId", async (req, res) => {
   const { userId } = req.params;
