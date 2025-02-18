@@ -4,19 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
     <h2>Login</h2>
-
+    
+    <% if (typeof error !== 'undefined') { %>
+        <div class="error-message"><%= error %></div>
+    <% } %>
+    
     <form action="/api/auth/login" method="POST">
         <label for="email">Email:</label>
         <input type="email" name="email" required>
-
+        
         <label for="password">Password:</label>
         <input type="password" name="password" required>
-
+        
         <button type="submit">Login</button>
     </form>
     
+    <p>Don't have an account? <a href="/">Sign up here</a></p>
 </body>
 </html>

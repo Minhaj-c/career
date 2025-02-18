@@ -4,15 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
+    <style>
+        .welcome-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .welcome-message {
+            margin-bottom: 2rem;
+        }
+        .start-button {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .start-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h2>Welcome, <%= username %>!</h2> <!-- Display username here -->
+    <div class="welcome-container">
+        <h1>Welcome, <%= username %>!</h1>
+        
+        <div class="welcome-message">
+            <p>Thank you for joining us! To help us provide you with the best recommendations, 
+            we need to know a little more about you.</p>
+            <p>We'll ask you a few quick questions about your qualifications, skills, and interests.</p>
+        </div>
 
-    <p>Welcome to our career recommender app! We are excited to help you find the best career path for you. Click the button below to get started with some questions.</p>
-
-    <form action="/questions/<%= userId %>" method="GET">
-        <button type="submit">Continue</button>
-    </form>
-    
+        <button class="start-button" onclick="window.location.href='/questions/<%= userId %>'">
+            Get Started
+        </button>
+    </div>
 </body>
 </html>

@@ -33,10 +33,19 @@ app.get("/", (req, res) => {
   res.render("signup");
 });
 
+
+app.use((req, res, next) => {
+  res.locals.error = undefined;
+  next();
+});
+
+
 app.use("/api/auth", authRoutes);
 
+
+
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login", { error: undefined });
 });
 
 app.get("/welcome/:userId", async (req, res) => {
@@ -48,10 +57,7 @@ app.get("/welcome/:userId", async (req, res) => {
     }
     res.render("welcome", { username: user.username, userId: user._id });
   } catch (error) {
-    console.error(
-      "Error fetching user or rendering welcome page:",
-      error.message
-    );
+    console.error("Error fetching user or rendering welcome page:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
@@ -489,46 +495,39 @@ app.get("/edit-profile/:userId", async (req, res) => {
 // Handle roadmap generation
 app.post("/roadmap", async (req, res) => {
   const { userId, selectedJobs } = req.body;
-
-  // Ensure selectedJobs is always an array (it might be a single value if only one job is selected)
   const jobsArray = Array.isArray(selectedJobs) ? selectedJobs : [selectedJobs];
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { 
+        selectedJobs: jobsArray,
+        hasSelectedJobs: true
+      },
+      { new: true }
+    );
+
     if (!user) {
       return res.status(400).json({ message: "User not found" });
     }
 
+    // Get roadmap details for selected jobs
     const roadmaps = [];
-
-    // For each selected job, find its details in the recommendations object
     for (const job of jobsArray) {
       let jobDetails = null;
-
-      // Find the job details
       for (const level in recommendations) {
         for (const skill in recommendations[level]) {
           for (const field in recommendations[level][skill]) {
             for (const interest in recommendations[level][skill][field]) {
-              const recommendation =
-                recommendations[level][skill][field][interest];
+              const recommendation = recommendations[level][skill][field][interest];
               recommendation.forEach((rec) => {
                 if (rec.jobs.includes(job)) {
                   jobDetails = {
                     job: job,
                     courses: rec.courses,
-                    salary:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].salary
-                        : null,
-                    workingHours:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].workingHours
-                        : null,
-                    description:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].description
-                        : null,
+                    salary: rec.details && rec.details[job] ? rec.details[job].salary : null,
+                    workingHours: rec.details && rec.details[job] ? rec.details[job].workingHours : null,
+                    description: rec.details && rec.details[job] ? rec.details[job].description : null,
                   };
                 }
               });
@@ -536,7 +535,6 @@ app.post("/roadmap", async (req, res) => {
           }
         }
       }
-
       if (jobDetails) {
         roadmaps.push(jobDetails);
       }
@@ -553,9 +551,67 @@ app.post("/roadmap", async (req, res) => {
   }
 });
 
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    // Check if user has selected jobs
+    if (user.hasSelectedJobs) {
+      // Redirect to roadmap page
+      res.redirect(`/roadmap/${user._id}`);
+    } else {
+      // Redirect to home page if no jobs selected
+      res.redirect(`/home/${user._id}`);
+    }
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Route to display the roadmap page directly from a link (GET request)
 app.get("/roadmap/:userId", async (req, res) => {
-  res.redirect(`/recommendations/${req.params.userId}`);
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!user.selectedJobs || user.selectedJobs.length === 0) {
+      return res.redirect(`/recommendations/${userId}`);
+    }
+
+    const roadmaps = [];
+    for (const job of user.selectedJobs) {
+      let jobDetails = null;
+      // Your existing code to get job details from recommendations
+      // ...
+
+      if (jobDetails) {
+        roadmaps.push(jobDetails);
+      }
+    }
+
+    res.render("roadmap", {
+      roadmaps,
+      username: user.username,
+      userId: user._id
+    });
+  } catch (error) {
+    console.error("Error fetching roadmap:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 // Handle logout

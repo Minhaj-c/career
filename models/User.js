@@ -7,16 +7,24 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     profilePic: { type: String },
     qualification: {
-      type: String,  // Qualification selected by user
+      type: String,
     },
     skills: {
-      type: [String],  // Array of skills selected by user
+      type: [String],
     },
     interests: {
-      type: [String],  // Array of interests (optional)
+      type: [String],
     },
     hobbies: {
       type: [String],
+    },
+    selectedJobs: {
+      type: [String], // Array to store selected jobs
+      default: []
+    },
+    hasSelectedJobs: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }
