@@ -142,6 +142,7 @@ app.get("/home/:userId", async (req, res) => {
       username: user.username,
       userId: user._id,
       profilePic: user.profilePic,
+      hasSelectedJobs: user.hasSelectedJobs
     });
   } catch (error) {
     console.error("Error fetching user or rendering home page:", error.message);
@@ -632,6 +633,60 @@ app.get("/roadmap/:userId", async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching roadmap:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.get("/your-interests/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!user.selectedJobs || user.selectedJobs.length === 0) {
+      return res.redirect(`/recommendations/${userId}`);
+    }
+
+    const selectedJobDetails = [];
+    for (const job of user.selectedJobs) {
+      let jobDetails = null;
+      
+      // Find job details in recommendations object
+      for (const level in recommendations) {
+        for (const skill in recommendations[level]) {
+          for (const field in recommendations[level][skill]) {
+            for (const interest in recommendations[level][skill][field]) {
+              const recommendation = recommendations[level][skill][field][interest];
+              recommendation.forEach((rec) => {
+                if (rec.jobs.includes(job)) {
+                  jobDetails = {
+                    job: job,
+                    courses: rec.courses,
+                    salary: rec.details && rec.details[job] ? rec.details[job].salary : null,
+                    workingHours: rec.details && rec.details[job] ? rec.details[job].workingHours : null,
+                    description: rec.details && rec.details[job] ? rec.details[job].description : null,
+                  };
+                }
+              });
+            }
+          }
+        }
+      }
+      
+      if (jobDetails) {
+        selectedJobDetails.push(jobDetails);
+      }
+    }
+
+    res.render("your-interests", {
+      selectedJobDetails,
+      username: user.username,
+      userId: user._id
+    });
+  } catch (error) {
+    console.error("Error fetching selected jobs:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

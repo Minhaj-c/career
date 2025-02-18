@@ -12,7 +12,11 @@
     </header>
 
     <main>
-        <button onclick="window.location.href='/recommendations/<%= userId %>'">Recommended for You</button>
+        <% if (hasSelectedJobs) { %>
+            <button onclick="window.location.href='/your-interests/<%= userId %>'">Your Interest</button>
+        <% } else { %>
+            <button onclick="window.location.href='/recommendations/<%= userId %>'">Recommended for You</button>
+        <% } %>
     </main>
 </body>
 </html>
