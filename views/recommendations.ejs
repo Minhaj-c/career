@@ -4,29 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recommendations</title>
+    <style>
+        .job-checkbox {
+            margin-right: 10px;
+        }
+        .error-message {
+            color: red;
+            display: none;
+            border: 1px solid red;
+            background-color: #f8d7da;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1>Recommended for You, <%= user.username %></h1>
     </header>
-
+    
     <main>
-        <% if (userRecommendations.length > 0) { %>
-            <% userRecommendations.forEach((recommendation, index) => { %>
-                <h2>Recommendation Set <%= index + 1 %></h2>
-                <% if (recommendation.jobs && recommendation.jobs.length > 0) { %>
-                    <h3>Job Opportunities</h3>
-                    <ul>
-                        <% recommendation.jobs.forEach(job => { %>
-                            <li><a href="/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>"><%= job %></a></li>
-                        <% }) %>
-                    </ul>
-                <% } %>
-            <% }) %>
-        <% } else { %>
-            <p>No recommendations found based on your current skills, interests, and hobbies.</p>
-        <% } %>
+        <form action="/roadmap" method="POST" id="jobSelectionForm" onsubmit="return validateForm()">
+            <input type="hidden" name="userId" value="<%= user._id %>">
+            
+            <% if (userRecommendations.length > 0) { %>
+                <% userRecommendations.forEach((recommendation, index) => { %>
+                    <h2>Recommendation Set <%= index + 1 %></h2>
+                    <% if (recommendation.jobs && recommendation.jobs.length > 0) { %>
+                        <h3>Job Opportunities</h3>
+                        <ul>
+                            <% recommendation.jobs.forEach(job => { %>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="selectedJobs" value="<%= job %>" class="job-checkbox">
+                                        <a href="/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>"><%= job %></a>
+                                    </label>
+                                </li>
+                            <% }) %>
+                        </ul>
+                    <% } %>
+                <% }) %>
+                <div id="error-message" class="error-message">Please select at least one job to generate a roadmap.</div>
+                <button type="submit">Generate Roadmap</button>
+            <% } else { %>
+                <p>No recommendations found based on your current skills, interests, and hobbies.</p>
+            <% } %>
+        </form>
         <button onclick="window.location.href='/home/<%= user._id %>'">Go Back to Home</button>
     </main>
+
+    <script>
+        function validateForm() {
+            var checkboxes = document.querySelectorAll('input[name="selectedJobs"]:checked');
+            var errorMessage = document.getElementById("error-message");
+            
+            if (checkboxes.length === 0) {
+                errorMessage.style.display = "block";
+                return false;
+            } else {
+                errorMessage.style.display = "none";
+                return true;
+            }
+        }
+    </script>
 </body>
 </html>

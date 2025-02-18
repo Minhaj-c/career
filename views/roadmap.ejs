@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Career Roadmap</title>
+    <style>
+        .roadmap-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .roadmap-step {
+            margin-bottom: 30px;
+            position: relative;
+        }
+        .roadmap-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 15px;
+            height: calc(100% - 30px);
+            width: 2px;
+            background-color: #007bff;
+        }
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+            width: calc(100% - 50px);
+        }
+        .course-section {
+            margin-top: 10px;
+            padding-left: 40px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Career Roadmap</h1>
+        <p>Welcome <%= username %>! Here's your personalized roadmap for your selected career path(s).</p>
+    </header>
+
+    <main>
+        <% if (roadmaps && roadmaps.length > 0) { %>
+            <% roadmaps.forEach(roadmap => { %>
+                <div class="roadmap-container">
+                    <h2><%= roadmap.job %></h2>
+                    
+                    <div class="roadmap-steps">
+                        <div class="roadmap-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h3>Getting Started</h3>
+                                <p>Build a foundation in the core skills needed for this role.</p>
+                                
+                                <% if (roadmap.courses && roadmap.courses.length > 0) { %>
+                                    <div class="course-section">
+                                        <h4>Recommended Courses:</h4>
+                                        <ul>
+                                            <% roadmap.courses.forEach(course => { %>
+                                                <li><a href="/course-details/<%= encodeURIComponent(course) %>"><%= course %></a></li>
+                                            <% }) %>
+                                        </ul>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h3>Building Experience</h3>
+                                <p>Start with entry-level positions or internships to gain practical experience.</p>
+                                <div class="course-section">
+                                    <h4>Suggested Activities:</h4>
+                                    <ul>
+                                        <li>Build personal projects</li>
+                                        <li>Contribute to open-source (if applicable)</li>
+                                        <li>Take up internships</li>
+                                        <li>Network with professionals in the field</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h3>Advanced Skills</h3>
+                                <p>Deepen your knowledge and specialize in areas relevant to <%= roadmap.job %>.</p>
+                                <div class="course-section">
+                                    <h4>Next Steps:</h4>
+                                    <ul>
+                                        <li>Advanced certifications</li>
+                                        <li>Specialized training</li>
+                                        <li>Leadership skills development</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h3>Career Growth</h3>
+                                <p>Potential career progression paths from <%= roadmap.job %>:</p>
+                                <div class="course-section">
+                                    <ul>
+                                        <li>Senior <%= roadmap.job %></li>
+                                        <li>Team Lead</li>
+                                        <li>Management positions</li>
+                                        <li>Specialized consultant</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="job-details">
+                        <h3>Key Information:</h3>
+                        <p><strong>Salary Range:</strong> <%= roadmap.salary || 'Information not available' %></p>
+                        <p><strong>Working Hours:</strong> <%= roadmap.workingHours || 'Standard working hours' %></p>
+                        <p><strong>Description:</strong> <%= roadmap.description || 'No detailed description available' %></p>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>No roadmap information available for the selected jobs. Please go back and select different jobs.</p>
+        <% } %>
+
+        <div class="actions">
+            <button onclick="window.location.href='/recommendations/<%= userId %>'">Back to Recommendations</button>
+            <button onclick="window.location.href='/home/<%= userId %>'">Go to Home</button>
+        </div>
+    </main>
+</body>
+</html>

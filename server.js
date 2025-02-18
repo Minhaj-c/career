@@ -186,7 +186,9 @@ app.get("/recommendations/:userId", async (req, res) => {
                     recommendations[qualification][skill][interest] &&
                     recommendations[qualification][skill][interest][hobby]
                   ) {
-                    recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                    recommendations[qualification][skill][interest][
+                      hobby
+                    ].forEach((rec) => {
                       userRecommendations.add(JSON.stringify(rec));
                     });
                   }
@@ -197,8 +199,12 @@ app.get("/recommendations/:userId", async (req, res) => {
                     recommendations[qualification][skill] &&
                     recommendations[qualification][skill][interest]
                   ) {
-                    for (const hobby in recommendations[qualification][skill][interest]) {
-                      recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                    for (const hobby in recommendations[qualification][skill][
+                      interest
+                    ]) {
+                      recommendations[qualification][skill][interest][
+                        hobby
+                      ].forEach((rec) => {
                         userRecommendations.add(JSON.stringify(rec));
                       });
                     }
@@ -212,9 +218,15 @@ app.get("/recommendations/:userId", async (req, res) => {
                   recommendations[qualification] &&
                   recommendations[qualification][skill]
                 ) {
-                  for (const interest in recommendations[qualification][skill]) {
-                    if (recommendations[qualification][skill][interest][hobby]) {
-                      recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                  for (const interest in recommendations[qualification][
+                    skill
+                  ]) {
+                    if (
+                      recommendations[qualification][skill][interest][hobby]
+                    ) {
+                      recommendations[qualification][skill][interest][
+                        hobby
+                      ].forEach((rec) => {
                         userRecommendations.add(JSON.stringify(rec));
                       });
                     }
@@ -228,8 +240,12 @@ app.get("/recommendations/:userId", async (req, res) => {
           if (recommendations[qualification]) {
             for (const skill in recommendations[qualification]) {
               for (const interest in recommendations[qualification][skill]) {
-                for (const hobby in recommendations[qualification][skill][interest]) {
-                  recommendations[qualification][skill][interest][hobby].forEach((rec) => {
+                for (const hobby in recommendations[qualification][skill][
+                  interest
+                ]) {
+                  recommendations[qualification][skill][interest][
+                    hobby
+                  ].forEach((rec) => {
                     userRecommendations.add(JSON.stringify(rec));
                   });
                 }
@@ -244,13 +260,18 @@ app.get("/recommendations/:userId", async (req, res) => {
       JSON.parse(rec)
     );
 
-    res.render("recommendations", { user, userRecommendations: uniqueRecommendations });
+    res.render("recommendations", {
+      user,
+      userRecommendations: uniqueRecommendations,
+    });
   } catch (error) {
-    console.error("Error fetching user or rendering recommendations page:", error.message);
+    console.error(
+      "Error fetching user or rendering recommendations page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 
 app.get("/job-details/:job", async (req, res) => {
   const job = decodeURIComponent(req.params.job);
@@ -285,7 +306,7 @@ app.get("/job-details/:job", async (req, res) => {
   }
 });
 
-app.get('/job-full-details/:job', async (req, res) => {
+app.get("/job-full-details/:job", async (req, res) => {
   const job = decodeURIComponent(req.params.job);
   const userId = req.query.userId;
   let fullJobDetails = null;
@@ -295,7 +316,7 @@ app.get('/job-full-details/:job', async (req, res) => {
       for (const field in recommendations[level][skill]) {
         for (const interest in recommendations[level][skill][field]) {
           const recommendation = recommendations[level][skill][field][interest];
-          recommendation.forEach(rec => {
+          recommendation.forEach((rec) => {
             if (rec.details && rec.details[job]) {
               fullJobDetails = rec.details[job];
             }
@@ -311,13 +332,12 @@ app.get('/job-full-details/:job', async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    res.render('job-full-details', { job, fullJobDetails, user });
+    res.render("job-full-details", { job, fullJobDetails, user });
   } catch (error) {
     console.error("Error fetching job details:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 
 app.get("/course-details/:course", (req, res) => {
   const course = decodeURIComponent(req.params.course);
@@ -462,6 +482,80 @@ app.get("/edit-profile/:userId", async (req, res) => {
     );
     res.status(500).json({ message: "Server error", error: error.message });
   }
+});
+
+// Add these routes to your server.js file
+
+// Handle roadmap generation
+app.post("/roadmap", async (req, res) => {
+  const { userId, selectedJobs } = req.body;
+
+  // Ensure selectedJobs is always an array (it might be a single value if only one job is selected)
+  const jobsArray = Array.isArray(selectedJobs) ? selectedJobs : [selectedJobs];
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const roadmaps = [];
+
+    // For each selected job, find its details in the recommendations object
+    for (const job of jobsArray) {
+      let jobDetails = null;
+
+      // Find the job details
+      for (const level in recommendations) {
+        for (const skill in recommendations[level]) {
+          for (const field in recommendations[level][skill]) {
+            for (const interest in recommendations[level][skill][field]) {
+              const recommendation =
+                recommendations[level][skill][field][interest];
+              recommendation.forEach((rec) => {
+                if (rec.jobs.includes(job)) {
+                  jobDetails = {
+                    job: job,
+                    courses: rec.courses,
+                    salary:
+                      rec.details && rec.details[job]
+                        ? rec.details[job].salary
+                        : null,
+                    workingHours:
+                      rec.details && rec.details[job]
+                        ? rec.details[job].workingHours
+                        : null,
+                    description:
+                      rec.details && rec.details[job]
+                        ? rec.details[job].description
+                        : null,
+                  };
+                }
+              });
+            }
+          }
+        }
+      }
+
+      if (jobDetails) {
+        roadmaps.push(jobDetails);
+      }
+    }
+
+    res.render("roadmap", {
+      roadmaps,
+      username: user.username,
+      userId: user._id,
+    });
+  } catch (error) {
+    console.error("Error generating roadmap:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Route to display the roadmap page directly from a link (GET request)
+app.get("/roadmap/:userId", async (req, res) => {
+  res.redirect(`/recommendations/${req.params.userId}`);
 });
 
 // Handle logout
