@@ -557,28 +557,30 @@ app.post("/api/auth/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).render('login', { error: 'User not found' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(400).render('login', { error: 'Invalid credentials' });
     }
 
     // Check if user has selected jobs
-    if (user.hasSelectedJobs) {
+    if (user.hasSelectedJobs && user.selectedJobs.length > 0) {
       // Redirect to roadmap page
-      res.redirect(`/roadmap/${user._id}`);
+      return res.redirect(`/roadmap/${user._id}`);
+    } else if (user.qualification) {
+      // If user has qualification but no jobs, go to home
+      return res.redirect(`/home/${user._id}`);
     } else {
-      // Redirect to home page if no jobs selected
-      res.redirect(`/home/${user._id}`);
+      // If user hasn't completed questions, redirect to questions
+      return res.redirect(`/questions/${user._id}`);
     }
   } catch (error) {
     console.error("Login error:", error.message);
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).render('login', { error: 'Server error occurred' });
   }
 });
-
 // Route to display the roadmap page directly from a link (GET request)
 app.get("/roadmap/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -595,9 +597,29 @@ app.get("/roadmap/:userId", async (req, res) => {
     const roadmaps = [];
     for (const job of user.selectedJobs) {
       let jobDetails = null;
-      // Your existing code to get job details from recommendations
-      // ...
-
+      
+      // Find job details in recommendations object
+      for (const level in recommendations) {
+        for (const skill in recommendations[level]) {
+          for (const field in recommendations[level][skill]) {
+            for (const interest in recommendations[level][skill][field]) {
+              const recommendation = recommendations[level][skill][field][interest];
+              recommendation.forEach((rec) => {
+                if (rec.jobs.includes(job)) {
+                  jobDetails = {
+                    job: job,
+                    courses: rec.courses,
+                    salary: rec.details && rec.details[job] ? rec.details[job].salary : null,
+                    workingHours: rec.details && rec.details[job] ? rec.details[job].workingHours : null,
+                    description: rec.details && rec.details[job] ? rec.details[job].description : null,
+                  };
+                }
+              });
+            }
+          }
+        }
+      }
+      
       if (jobDetails) {
         roadmaps.push(jobDetails);
       }
@@ -613,7 +635,6 @@ app.get("/roadmap/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 // Handle logout
 app.get("/logout", (req, res) => {
   // Clear session or any authentication tokens
