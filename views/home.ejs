@@ -14,6 +14,7 @@
     <main>
         <% if (hasSelectedJobs) { %>
             <button onclick="window.location.href='/your-interests/<%= userId %>'">Your Interest</button>
+            <button onclick="window.location.href='/progress/<%= userId %>'">Your Progress</button>
         <% } else { %>
             <button onclick="window.location.href='/recommendations/<%= userId %>'">Recommended for You</button>
         <% } %>

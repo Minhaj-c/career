@@ -727,6 +727,52 @@ app.get("/your-interests/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+app.get("/progress/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(400).json({ message: "User not found" });
+      }
+
+      // Get the selected job and its roadmap
+      const selectedJob = user.selectedJobs[0];
+      const jobContent = weeklyContent[selectedJob];
+
+      if (!jobContent) {
+          return res.status(400).json({ message: "Job path not found" });
+      }
+
+      // Get the user's progress for the selected job
+      const progress = user.weeklyProgress.get(selectedJob) || {
+          completedWeeks: [],
+          unlockedWeeks: [1],
+          quizScores: new Map(),
+      };
+
+      // Calculate progress percentage
+      const totalWeeks = jobContent.weeks.length;
+      const completedWeeks = progress.completedWeeks.length;
+      const progressPercentage = ((completedWeeks / totalWeeks) * 100).toFixed(2);
+
+      // Render the progress page
+      res.render("progress", {
+          username: user.username,
+          userId: user._id,
+          selectedJob,
+          completedWeeks,
+          totalWeeks,
+          progressPercentage,
+          weeks: jobContent.weeks,
+          progress,
+      });
+  } catch (error) {
+      console.error("Error fetching progress:", error.message);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Handle logout
 app.get("/logout", (req, res) => {
   // Clear session or any authentication tokens

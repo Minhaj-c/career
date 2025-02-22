@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Progress</title>
+    <style>
+        .progress-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            background-color: #4CAF50;
+            width: <%= progressPercentage %>%;
+        }
+        .week-container {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .week-completed {
+            background-color: #e8f5e9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Progress - <%= selectedJob %></h1>
+        <p>Welcome <%= username %>! Here's your progress so far.</p>
+        <button onclick="window.location.href='/home/<%= userId %>'" class="go-home-btn">Go Back to Home</button>
+    </header>
+
+    <main>
+        <div class="progress-container">
+            <h2>Progress Overview</h2>
+            <p>You have completed <%= completedWeeks %> out of <%= totalWeeks %> weeks.</p>
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="weeks-container">
+            <h2>Weekly Progress</h2>
+            <% weeks.forEach((week, index) => { %>
+                <div class="week-container <%= progress.completedWeeks.includes(index + 1) ? 'week-completed' : '' %>">
+                    <h3>Week <%= index + 1 %>: <%= week.title %></h3>
+                    <p><%= week.description %></p>
+                    <% if (progress.completedWeeks.includes(index + 1)) { %>
+                        <p>✅ Completed</p>
+                    <% } else { %>
+                        <p>🔒 Not Completed</p>
+                    <% } %>
+                </div>
+            <% }) %>
+        </div>
+    </main>
+</body>
+</html>
