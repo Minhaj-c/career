@@ -79,6 +79,20 @@
             color: white;
             border-color: #0056b3;
         }
+
+        /* Style for the "Go Back to Home" button */
+        .go-home-btn {
+            background-color: #6c757d; /* Gray color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .go-home-btn:hover {
+            background-color: #5a6268; /* Darker gray on hover */
+        }
     </style>
 </head>
 <body>
@@ -90,6 +104,8 @@
     <header>
         <h1>Your Weekly Career Roadmap - <%= roadmap.job %></h1>
         <p>Welcome <%= username %>! Follow this structured learning path to achieve your career goals.</p>
+        <!-- "Go Back to Home" button -->
+        <button onclick="window.location.href='/home/<%= userId %>'" class="go-home-btn">Go Back to Home</button>
     </header>
 
     <main>
