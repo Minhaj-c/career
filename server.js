@@ -773,6 +773,30 @@ app.get("/progress/:userId", async (req, res) => {
   }
 });
 
+app.post("/api/roadmap/drop-out", async (req, res) => {
+  const { userId, job } = req.body;
+
+  try {
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(400).json({ message: "User not found" });
+      }
+
+      // Remove the selected job and reset progress
+      user.selectedJobs = [];
+      user.hasSelectedJobs = false;
+      user.weeklyProgress.delete(job); // Remove progress for the dropped job
+
+      await user.save();
+
+      res.json({ success: true });
+  } catch (error) {
+      console.error("Error dropping out:", error.message);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+
 // Handle logout
 app.get("/logout", (req, res) => {
   // Clear session or any authentication tokens
