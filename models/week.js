@@ -29,7 +29,7 @@ export const weeklyContent = {
                         },
                         {
                             question: "What is the correct HTML element for the largest heading?",
-                            options: ["<heading>", "<h6>", "<head>", "<h1>"],
+                            options: ["heading", "h6", "head", "h1"],
                             correctAnswer: 3
                         },
                         {
