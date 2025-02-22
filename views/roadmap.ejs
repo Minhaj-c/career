@@ -105,7 +105,7 @@
         <h1>Your Weekly Career Roadmap - <%= roadmap.job %></h1>
         <p>Welcome <%= username %>! Follow this structured learning path to achieve your career goals.</p>
         <!-- "Go Back to Home" button -->
-        <button onclick="window.location.href='/home/<%= userId %>'" class="go-home-btn">Go Back to Home</button>
+        
     </header>
 
     <main>
@@ -151,6 +151,7 @@
             <p id="resultMessage"></p>
             <button class="start-quiz-btn" onclick="closeQuiz()">Return to Roadmap</button>
         </div>
+        <button onclick="window.location.href='/home/<%= userId %>'" class="go-home-btn">Go Back to Home</button>
     </main>
 
     <script>
