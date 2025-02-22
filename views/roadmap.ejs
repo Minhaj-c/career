@@ -3,147 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Career Roadmap</title>
+    <title>Weekly Career Roadmap</title>
     <style>
-        .roadmap-container {
+        .week-container {
+            border: 1px solid #ccc;
             margin: 20px 0;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
         }
-        .roadmap-step {
-            margin-bottom: 30px;
-            position: relative;
+        .week-locked {
+            opacity: 0.5;
+            pointer-events: none;
         }
-        .roadmap-step:not(:last-child)::after {
-            content: '';
-            position: absolute;
-            top: 30px;
-            left: 15px;
-            height: calc(100% - 30px);
-            width: 2px;
-            background-color: #007bff;
+        .week-completed {
+            border-color: #4CAF50;
         }
-        .step-number {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
+        .start-quiz-btn {
             background-color: #007bff;
             color: white;
-            text-align: center;
-            line-height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        .step-content {
-            display: inline-block;
-            vertical-align: top;
-            width: calc(100% - 50px);
+        .start-quiz-btn:hover {
+            background-color: #0056b3;
         }
-        .course-section {
+        .quiz-container {
+            display: none;
+            margin-top: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .quiz-result {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .quiz-result.pass {
+            border-color: #4CAF50;
+            background-color: #e8f5e9;
+        }
+        .quiz-result.fail {
+            border-color: #f44336;
+            background-color: #ffebee;
+        }
+        .quiz-question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 10px;
-            padding-left: 40px;
+        }
+        .quiz-option {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .quiz-option:hover {
+            background-color: #f0f0f0;
+        }
+        .quiz-option.selected {
+            background-color: #007bff;
+            color: white;
+            border-color: #0056b3;
         }
     </style>
 </head>
 <body>
+    <!-- Make weeks data available to client JS -->
+    <script>
+        const weeks = <%- JSON.stringify(weeks) %>;
+    </script>
+
     <header>
-        <h1>Your Career Roadmap</h1>
-        <p>Welcome <%= username %>! Here's your personalized roadmap for your selected career path(s).</p>
+        <h1>Your Weekly Career Roadmap - <%= roadmap.job %></h1>
+        <p>Welcome <%= username %>! Follow this structured learning path to achieve your career goals.</p>
     </header>
 
     <main>
-        <% if (roadmaps && roadmaps.length > 0) { %>
-            <% roadmaps.forEach(roadmap => { %>
-                <div class="roadmap-container">
-                    <h2><%= roadmap.job %></h2>
-                    
-                    <div class="roadmap-steps">
-                        <div class="roadmap-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h3>Getting Started</h3>
-                                <p>Build a foundation in the core skills needed for this role.</p>
-                                
-                                <% if (roadmap.courses && roadmap.courses.length > 0) { %>
-                                    <div class="course-section">
-                                        <h4>Recommended Courses:</h4>
-                                        <ul>
-                                            <% roadmap.courses.forEach(course => { %>
-                                                <li><a href="/course-details/<%= encodeURIComponent(course) %>"><%= course %></a></li>
-                                            <% }) %>
-                                        </ul>
-                                    </div>
-                                <% } %>
-                            </div>
-                        </div>
+        <!-- Add hidden fields -->
+        <input type="hidden" name="userId" value="<%= userId %>">
+        <input type="hidden" name="job" value="<%= roadmap.job %>">
 
-                        <div class="roadmap-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h3>Building Experience</h3>
-                                <p>Start with entry-level positions or internships to gain practical experience.</p>
-                                <div class="course-section">
-                                    <h4>Suggested Activities:</h4>
-                                    <ul>
-                                        <li>Build personal projects</li>
-                                        <li>Contribute to open-source (if applicable)</li>
-                                        <li>Take up internships</li>
-                                        <li>Network with professionals in the field</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="roadmap-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h3>Advanced Skills</h3>
-                                <p>Deepen your knowledge and specialize in areas relevant to <%= roadmap.job %>.</p>
-                                <div class="course-section">
-                                    <h4>Next Steps:</h4>
-                                    <ul>
-                                        <li>Advanced certifications</li>
-                                        <li>Specialized training</li>
-                                        <li>Leadership skills development</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="roadmap-step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h3>Career Growth</h3>
-                                <p>Potential career progression paths from <%= roadmap.job %>:</p>
-                                <div class="course-section">
-                                    <ul>
-                                        <li>Senior <%= roadmap.job %></li>
-                                        <li>Team Lead</li>
-                                        <li>Management positions</li>
-                                        <li>Specialized consultant</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="job-details">
-                        <h3>Key Information:</h3>
-                        <p><strong>Salary Range:</strong> <%= roadmap.salary || 'Information not available' %></p>
-                        <p><strong>Working Hours:</strong> <%= roadmap.workingHours || 'Standard working hours' %></p>
-                        <p><strong>Description:</strong> <%= roadmap.description || 'No detailed description available' %></p>
-                    </div>
+        <div id="weeklyContent">
+            <% weeks.forEach((week, index) => { %>
+                <div class="week-container <%= !user.unlockedWeeks.includes(index + 1) ? 'week-locked' : '' %> <%= user.completedWeeks.includes(index + 1) ? 'week-completed' : '' %>">
+                    <h2>Week <%= index + 1 %>: <%= week.title %>
+                        <% if (!user.unlockedWeeks.includes(index + 1)) { %>
+                            <span class="lock-icon">🔒</span>
+                        <% } else if (user.completedWeeks.includes(index + 1)) { %>
+                            <span class="check-icon">✅</span>
+                        <% } %>
+                    </h2>
+                    <p><%= week.description %></p>
+                    <h3>Tasks:</h3>
+                    <ul>
+                        <% week.tasks.forEach(task => { %>
+                            <li><%= task %></li>
+                        <% }) %>
+                    </ul>
+                    <% if (user.unlockedWeeks.includes(index + 1) && !user.completedWeeks.includes(index + 1)) { %>
+                        <button class="start-quiz-btn" data-week="<%= index + 1 %>">
+                            Take Week <%= index + 1 %> Quiz
+                        </button>
+                    <% } %>
                 </div>
             <% }) %>
-        <% } else { %>
-            <p>No roadmap information available for the selected jobs. Please go back and select different jobs.</p>
-        <% } %>
+        </div>
 
-        <div class="actions">
-            <button onclick="window.location.href='/recommendations/<%= userId %>'">Back to Recommendations</button>
-            <button onclick="window.location.href='/home/<%= userId %>'">Go to Home</button>
+        <div id="quizContainer" class="quiz-container">
+            <h2 id="quizTitle"></h2>
+            <div id="quizQuestions"></div>
+            <button class="start-quiz-btn" onclick="submitQuiz()">Submit Quiz</button>
+        </div>
+
+        <div id="quizResult" class="quiz-result">
+            <h3>Quiz Result</h3>
+            <p id="scoreDisplay"></p>
+            <p id="resultMessage"></p>
+            <button class="start-quiz-btn" onclick="closeQuiz()">Return to Roadmap</button>
         </div>
     </main>
+
+    <script>
+        let currentWeek = null;
+        let selectedAnswers = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.start-quiz-btn');
+            
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!this.dataset.week) return;
+                    e.preventDefault();
+                    const week = parseInt(this.dataset.week);
+                    currentWeek = week;
+                    startQuiz(week);
+                });
+            });
+        });
+
+        function startQuiz(week) {
+            if (!weeks || !weeks[week - 1] || !weeks[week - 1].quiz) {
+                console.error('Quiz data not found for week:', week);
+                return;
+            }
+
+            const weeklyContent = document.getElementById('weeklyContent');
+            const quizContainer = document.getElementById('quizContainer');
+            const quizResult = document.getElementById('quizResult');
+
+            // Reset quiz state
+            selectedAnswers = {};
+            
+            weeklyContent.style.display = 'none';
+            quizContainer.style.display = 'block';
+            quizResult.style.display = 'none';
+
+            const quiz = weeks[week - 1].quiz;
+            document.getElementById('quizTitle').textContent = `Week ${week} Quiz`;
+
+            // Clear and render new questions
+            const questionsContainer = document.getElementById('quizQuestions');
+            questionsContainer.innerHTML = quiz.questions.map((q, index) => `
+                <div class="quiz-question">
+                    <p><strong>Question ${index + 1}: ${q.question}</strong></p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, optIndex) => `
+                            <div class="quiz-option" 
+                                 onclick="selectAnswer(${index}, ${optIndex})"
+                                 data-question="${index}"
+                                 data-option="${optIndex}">
+                                ${opt}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectAnswer(questionIndex, optionIndex) {
+            selectedAnswers[questionIndex] = optionIndex;
+
+            // Update UI to show selection
+            const options = document.querySelectorAll(`[data-question="${questionIndex}"]`);
+            options.forEach(opt => {
+                opt.parentElement.querySelectorAll('.quiz-option').forEach(o => {
+                    o.classList.remove('selected');
+                });
+            });
+
+            const selectedOption = document.querySelector(
+                `[data-question="${questionIndex}"][data-option="${optionIndex}"]`
+            );
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+        }
+
+        async function submitQuiz() {
+            if (currentWeek === null || !weeks[currentWeek - 1].quiz) {
+                console.error('Invalid quiz state');
+                return;
+            }
+
+            const quiz = weeks[currentWeek - 1].quiz;
+            let score = 0;
+            const totalQuestions = quiz.questions.length;
+
+            // Validate all questions are answered
+            if (Object.keys(selectedAnswers).length < totalQuestions) {
+                alert('Please answer all questions before submitting.');
+                return;
+            }
+
+            // Calculate score
+            quiz.questions.forEach((q, index) => {
+                if (selectedAnswers[index] === q.correctAnswer) {
+                    score++;
+                }
+            });
+
+            const percentage = (score / totalQuestions) * 100;
+
+            try {
+                const response = await fetch('/api/progress/quiz', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: document.querySelector('[name="userId"]').value,
+                        week: currentWeek,
+                        score: percentage,
+                        job: document.querySelector('[name="job"]').value
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save quiz progress');
+                }
+
+                const result = await response.json();
+                if (result.success) {
+                    displayQuizResult(percentage);
+                }
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+                alert('Error saving quiz progress. Please try again.');
+            }
+        }
+
+        function displayQuizResult(score) {
+            const quizContainer = document.getElementById('quizContainer');
+            const resultDiv = document.getElementById('quizResult');
+
+            quizContainer.style.display = 'none';
+            resultDiv.style.display = 'block';
+
+            document.getElementById('scoreDisplay').textContent = `Score: ${score.toFixed(1)}%`;
+
+            if (score >= 70) {
+                resultDiv.classList.add('pass');
+                resultDiv.classList.remove('fail');
+                document.getElementById('resultMessage').textContent = 
+                    'Congratulations! You\'ve passed this week\'s quiz! The next week has been unlocked.';
+            } else {
+                resultDiv.classList.add('fail');
+                resultDiv.classList.remove('pass');
+                document.getElementById('resultMessage').textContent = 
+                    'Please review the material and try again to unlock the next week.';
+            }
+        }
+
+        function closeQuiz() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'none';
+            document.getElementById('weeklyContent').style.display = 'block';
+            window.location.reload();
+        }
+    </script>
 </body>
 </html>

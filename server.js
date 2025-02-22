@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import User from "./models/User.js";
 import fs from "fs";
 import { recommendations } from "./models/recommendations.js";
+import { weeklyContent } from "./models/week.js";
 
 dotenv.config();
 connectDB();
@@ -493,6 +494,7 @@ app.get("/edit-profile/:userId", async (req, res) => {
 // Add these routes to your server.js file
 
 // Handle roadmap generation
+// Handle roadmap generation
 app.post("/roadmap", async (req, res) => {
   const { userId, selectedJobs } = req.body;
   const jobsArray = Array.isArray(selectedJobs) ? selectedJobs : [selectedJobs];
@@ -511,50 +513,40 @@ app.post("/roadmap", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // Get roadmap details for selected jobs
-    const roadmaps = [];
-    for (const job of jobsArray) {
-      let jobDetails = null;
-      for (const level in recommendations) {
-        for (const skill in recommendations[level]) {
-          for (const field in recommendations[level][skill]) {
-            for (const interest in recommendations[level][skill][field]) {
-              const recommendation =
-                recommendations[level][skill][field][interest];
-              recommendation.forEach((rec) => {
-                if (rec.jobs.includes(job)) {
-                  jobDetails = {
-                    job: job,
-                    courses: rec.courses,
-                    salary:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].salary
-                        : null,
-                    workingHours:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].workingHours
-                        : null,
-                    description:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].description
-                        : null,
-                  };
-                }
-              });
-            }
-          }
-        }
-      }
-      if (jobDetails) {
-        roadmaps.push(jobDetails);
-      }
+    // Get details for the first selected job
+    const selectedJob = jobsArray[0]; // We'll use the first job for the roadmap
+    const jobContent = weeklyContent[selectedJob];
+
+    if (!jobContent) {
+      return res.status(400).json({ message: "Job path not found" });
     }
 
+    // Initialize progress for this job if not exists
+    if (!user.weeklyProgress.has(selectedJob)) {
+      user.weeklyProgress.set(selectedJob, {
+        completedWeeks: [],
+        unlockedWeeks: [1],
+        quizScores: new Map()
+      });
+      await user.save();
+    }
+
+    const progress = user.weeklyProgress.get(selectedJob);
+
+    // Render the roadmap template with all required variables
     res.render("roadmap", {
-      roadmaps,
       username: user.username,
       userId: user._id,
+      roadmap: { job: selectedJob }, // Pass job as an object property
+      weeks: jobContent.weeks,
+      user: {
+        completedWeeks: progress.completedWeeks,
+        unlockedWeeks: progress.unlockedWeeks,
+        quizScores: progress.quizScores
+      },
+      totalWeeks: jobContent.weeks.length
     });
+
   } catch (error) {
     console.error("Error generating roadmap:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -600,58 +592,74 @@ app.get("/roadmap/:userId", async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    if (!user.selectedJobs || user.selectedJobs.length === 0) {
-      return res.redirect(`/recommendations/${userId}`);
+    const job = user.selectedJobs[0];
+    const jobContent = weeklyContent[job]; // Get weekly content for the selected job
+
+    if (!jobContent) {
+      return res.status(400).json({ message: "Job path not found" });
     }
 
-    const roadmaps = [];
-    for (const job of user.selectedJobs) {
-      let jobDetails = null;
-
-      // Find job details in recommendations object
-      for (const level in recommendations) {
-        for (const skill in recommendations[level]) {
-          for (const field in recommendations[level][skill]) {
-            for (const interest in recommendations[level][skill][field]) {
-              const recommendation =
-                recommendations[level][skill][field][interest];
-              recommendation.forEach((rec) => {
-                if (rec.jobs.includes(job)) {
-                  jobDetails = {
-                    job: job,
-                    courses: rec.courses,
-                    salary:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].salary
-                        : null,
-                    workingHours:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].workingHours
-                        : null,
-                    description:
-                      rec.details && rec.details[job]
-                        ? rec.details[job].description
-                        : null,
-                  };
-                }
-              });
-            }
-          }
-        }
-      }
-
-      if (jobDetails) {
-        roadmaps.push(jobDetails);
-      }
+    // Initialize progress if not exists
+    if (!user.weeklyProgress.has(job)) {
+      user.weeklyProgress.set(job, {
+        completedWeeks: [],
+        unlockedWeeks: [1],
+        quizScores: new Map(),
+      });
+      await user.save();
     }
+
+    const progress = user.weeklyProgress.get(job);
 
     res.render("roadmap", {
-      roadmaps,
       username: user.username,
       userId: user._id,
+      roadmap: { job },
+      weeks: jobContent.weeks, // Pass weeks data to the template
+      user: {
+        completedWeeks: progress.completedWeeks,
+        unlockedWeeks: progress.unlockedWeeks,
+      },
+      totalWeeks: jobContent.weeks.length,
     });
   } catch (error) {
     console.error("Error fetching roadmap:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+app.post("/api/progress/quiz", async (req, res) => {
+  const { userId, week, score, job } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const progress = user.weeklyProgress.get(job) || {
+      completedWeeks: [],
+      unlockedWeeks: [1],
+      quizScores: new Map(),
+    };
+
+    progress.quizScores.set(week.toString(), score);
+
+    if (score >= 70) {
+      if (!progress.completedWeeks.includes(week)) {
+        progress.completedWeeks.push(week);
+      }
+      if (!progress.unlockedWeeks.includes(week + 1)) {
+        progress.unlockedWeeks.push(week + 1);
+      }
+    }
+
+    user.weeklyProgress.set(job, progress);
+    await user.save();
+
+    res.json({ success: true, progress });
+  } catch (error) {
+    console.error("Error saving quiz progress:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });

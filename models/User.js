@@ -25,7 +25,19 @@ const userSchema = new mongoose.Schema(
     hasSelectedJobs: {
       type: Boolean,
       default: false
+    },
+
+    weeklyProgress: {
+      type: Map,
+      of: {
+        completedWeeks: [Number],
+        unlockedWeeks: [Number],
+        quizScores: Map
+      },
+      default: new Map()
     }
+
+    
   },
   { timestamps: true }
 );
