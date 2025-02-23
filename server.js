@@ -9,6 +9,7 @@ import User from "./models/User.js";
 import fs from "fs";
 import { recommendations } from "./models/recommendations.js";
 import { weeklyContent } from "./models/week.js";
+import Post from "./models/Community.js";
 
 dotenv.config();
 connectDB();
@@ -526,7 +527,7 @@ app.post("/roadmap", async (req, res) => {
       user.weeklyProgress.set(selectedJob, {
         completedWeeks: [],
         unlockedWeeks: [1],
-        quizScores: new Map()
+        quizScores: new Map(),
       });
       await user.save();
     }
@@ -542,11 +543,10 @@ app.post("/roadmap", async (req, res) => {
       user: {
         completedWeeks: progress.completedWeeks,
         unlockedWeeks: progress.unlockedWeeks,
-        quizScores: progress.quizScores
+        quizScores: progress.quizScores,
       },
-      totalWeeks: jobContent.weeks.length
+      totalWeeks: jobContent.weeks.length,
     });
-
   } catch (error) {
     console.error("Error generating roadmap:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -731,45 +731,45 @@ app.get("/your-interests/:userId", async (req, res) => {
 app.get("/progress/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
-      const user = await User.findById(userId);
-      if (!user) {
-          return res.status(400).json({ message: "User not found" });
-      }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
-      // Get the selected job and its roadmap
-      const selectedJob = user.selectedJobs[0];
-      const jobContent = weeklyContent[selectedJob];
+    // Get the selected job and its roadmap
+    const selectedJob = user.selectedJobs[0];
+    const jobContent = weeklyContent[selectedJob];
 
-      if (!jobContent) {
-          return res.status(400).json({ message: "Job path not found" });
-      }
+    if (!jobContent) {
+      return res.status(400).json({ message: "Job path not found" });
+    }
 
-      // Get the user's progress for the selected job
-      const progress = user.weeklyProgress.get(selectedJob) || {
-          completedWeeks: [],
-          unlockedWeeks: [1],
-          quizScores: new Map(),
-      };
+    // Get the user's progress for the selected job
+    const progress = user.weeklyProgress.get(selectedJob) || {
+      completedWeeks: [],
+      unlockedWeeks: [1],
+      quizScores: new Map(),
+    };
 
-      // Calculate progress percentage
-      const totalWeeks = jobContent.weeks.length;
-      const completedWeeks = progress.completedWeeks.length;
-      const progressPercentage = ((completedWeeks / totalWeeks) * 100).toFixed(2);
+    // Calculate progress percentage
+    const totalWeeks = jobContent.weeks.length;
+    const completedWeeks = progress.completedWeeks.length;
+    const progressPercentage = ((completedWeeks / totalWeeks) * 100).toFixed(2);
 
-      // Render the progress page
-      res.render("progress", {
-          username: user.username,
-          userId: user._id,
-          selectedJob,
-          completedWeeks,
-          totalWeeks,
-          progressPercentage,
-          weeks: jobContent.weeks,
-          progress,
-      });
+    // Render the progress page
+    res.render("progress", {
+      username: user.username,
+      userId: user._id,
+      selectedJob,
+      completedWeeks,
+      totalWeeks,
+      progressPercentage,
+      weeks: jobContent.weeks,
+      progress,
+    });
   } catch (error) {
-      console.error("Error fetching progress:", error.message);
-      res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error fetching progress:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
@@ -777,25 +777,78 @@ app.post("/api/roadmap/drop-out", async (req, res) => {
   const { userId, job } = req.body;
 
   try {
-      const user = await User.findById(userId);
-      if (!user) {
-          return res.status(400).json({ message: "User not found" });
-      }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
-      // Remove the selected job and reset progress
-      user.selectedJobs = [];
-      user.hasSelectedJobs = false;
-      user.weeklyProgress.delete(job); // Remove progress for the dropped job
+    // Remove the selected job and reset progress
+    user.selectedJobs = [];
+    user.hasSelectedJobs = false;
+    user.weeklyProgress.delete(job); // Remove progress for the dropped job
 
-      await user.save();
+    await user.save();
 
-      res.json({ success: true });
+    res.json({ success: true });
   } catch (error) {
-      console.error("Error dropping out:", error.message);
-      res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error dropping out:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
+app.get("/community/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const posts = await Post.find().populate("userId", "username profilePic");
+    const user = await User.findById(userId);
+    res.render("community", {
+      userId,
+      posts,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    res.status(500).send("Error loading community page.");
+  }
+});
+
+// Create a New Post
+app.post("/create-post/:userId", async (req, res) => {
+  try {
+    const { content } = req.body;
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    const newPost = new Post({
+      userId,
+      username: user.username,
+      content,
+    });
+    await newPost.save();
+    res.redirect(`/community/${userId}`);
+  } catch (error) {
+    res.status(500).send("Error creating post.");
+  }
+});
+
+// Add a Comment to a Post
+app.post("/add-comment/:postId/:userId", async (req, res) => {
+  try {
+    const { comment } = req.body;
+    const postId = req.params.postId;
+    const userId = req.params.userId;
+    const user = await User.findById(userId);
+    const post = await Post.findById(postId);
+    post.comments.push({
+      userId,
+      username: user.username,
+      content: comment,
+    });
+    await post.save();
+    res.redirect(`/community/${userId}`);
+  } catch (error) {
+    res.status(500).send("Error adding comment.");
+  }
+});
 
 // Handle logout
 app.get("/logout", (req, res) => {

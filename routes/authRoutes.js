@@ -4,6 +4,7 @@ import { registerUser, loginUser } from '../controllers/authController.js';
 import multer from 'multer';
 import path from 'path';
 
+
 const router = express.Router();
 
 // Multer configuration for file upload
