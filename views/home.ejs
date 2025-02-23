@@ -1,96 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Home</title>
     <style>
-        .community-button {
-            background-color: #4CAF50; /* Green */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .community-button:hover {
-            background-color: #45a049; /* Darker green on hover */
-        }
+      .community-button {
+        background-color: #4caf50; /* Green */
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+      .community-button:hover {
+        background-color: #45a049; /* Darker green on hover */
+      }
 
-        .skill-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-size: 16px;
-        }
-        .skill-button:hover {
-            background-color: #45a049;
-        }
+      .skill-button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 20px;
+        font-size: 16px;
+      }
+      .skill-button:hover {
+        background-color: #45a049;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <img src="/uploads/<%= profilePic %>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;" onclick="window.location.href='/dashboard/<%= userId %>'">
-        <h1>Welcome, <%= username %>!</h1>
+      <img
+        src="/uploads/<%= profilePic %>"
+        alt="Profile Picture"
+        style="width: 50px; height: 50px; border-radius: 50%"
+        onclick="window.location.href='/dashboard/<%= userId %>'"
+      />
+      <h1>Welcome, <%= username %>!</h1>
     </header>
 
     <main>
-        <% if (hasSelectedJobs) { %>
-            <button onclick="window.location.href='/your-interests/<%= userId %>'">Your Interest</button>
-            <button onclick="window.location.href='/progress/<%= userId %>'">Your Progress</button>
-            <div style="margin-top: 30px;">
-                <button class="skill-button" onclick="window.location.href='/improve-skills/<%= userId %>'">Improve Your Skills</button>
-            </div>
-        <% } else { %>
-            <button onclick="window.location.href='/recommendations/<%= userId %>'">Recommended for You</button>
-        <% } %>
+      <% if (hasSelectedJobs) { %>
+      <button onclick="window.location.href='/your-interests/<%= userId %>'">
+        Your Interest
+      </button>
+      <button onclick="window.location.href='/progress/<%= userId %>'">
+        Your Progress
+      </button>
+      <div style="margin-top: 30px">
+        <button
+          class="skill-button"
+          onclick="window.location.href='/improve-skills/<%= userId %>'"
+        >
+          Improve Your Skills
+        </button>
+      </div>
+      <!-- home.ejs -->
 
-        <!-- Community Section -->
-        <div style="margin-top: 30px;">
-            <h2>Community</h2>
-            <p>Connect with others, ask questions, and share your career journey!</p>
-            <button class="community-button" onclick="window.location.href='/community/<%= userId %>'">Join the Community</button>
-        </div>
+      <button onclick="window.location.href='/projects/<%= userId %>'">
+        Recommended Projects
+      </button>
+      <% } else { %>
+      <button onclick="window.location.href='/recommendations/<%= userId %>'">
+        Recommended for You
+      </button>
+      <% } %>
+
+      <!-- Community Section -->
+      <div style="margin-top: 30px">
+        <h2>Community</h2>
+        <p>
+          Connect with others, ask questions, and share your career journey!
+        </p>
+        <button
+          class="community-button"
+          onclick="window.location.href='/community/<%= userId %>'"
+        >
+          Join the Community
+        </button>
+      </div>
     </main>
     <script>
-    window.addEventListener('DOMContentLoaded', () => {
+      window.addEventListener("DOMContentLoaded", () => {
         fetchSkillRecommendations();
-    });
+      });
 
-    async function fetchSkillRecommendations() {
+      async function fetchSkillRecommendations() {
         try {
-            const response = await fetch('/api/skill-recommendations/<%= userId %>');
-            const data = await response.json();
-            
-            // Update certifications section
-            const certificationsHtml = data.certifications.map(cert => `
+          const response = await fetch(
+            "/api/skill-recommendations/<%= userId %>"
+          );
+          const data = await response.json();
+
+          // Update certifications section
+          const certificationsHtml = data.certifications
+            .map(
+              (cert) => `
                 <div class="resource-item">
                     <h4>${cert.title}</h4>
                     <p>${cert.description}</p>
                     <a href="${cert.link}" target="_blank" class="resource-link">Learn More →</a>
                 </div>
-            `).join('');
-            document.getElementById('certificationsList').innerHTML = certificationsHtml;
+            `
+            )
+            .join("");
+          document.getElementById("certificationsList").innerHTML =
+            certificationsHtml;
 
-            // Update resources section
-            const resourcesHtml = data.freeResources.map(resource => `
+          // Update resources section
+          const resourcesHtml = data.freeResources
+            .map(
+              (resource) => `
                 <div class="resource-item">
                     <h4>${resource.title}</h4>
                     <p>${resource.description}</p>
                     <a href="${resource.link}" target="_blank" class="resource-link">Start Learning →</a>
                 </div>
-            `).join('');
-            document.getElementById('resourcesList').innerHTML = resourcesHtml;
+            `
+            )
+            .join("");
+          document.getElementById("resourcesList").innerHTML = resourcesHtml;
         } catch (error) {
-            console.error('Error fetching skill recommendations:', error);
+          console.error("Error fetching skill recommendations:", error);
         }
-    }
-</script>
-
-</body>
+      }
+    </script>
+  </body>
 </html>

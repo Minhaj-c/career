@@ -11,6 +11,7 @@ import { recommendations } from "./models/recommendations.js";
 import { weeklyContent } from "./models/week.js";
 import Post from "./models/Community.js";
 import { jobRecommendations, defaultRecommendations } from './models/jobRecommendations.js';
+import projectRecommendations from "./models/projectRecommendations.js";
 
 dotenv.config();
 connectDB();
@@ -987,6 +988,29 @@ app.get("/api/goal-progress/:userId", async (req, res) => {
   }
 });
 
+
+app.get("/projects/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    const selectedJob = user.selectedJobs[0]; // Assuming the user has selected at least one job
+    const recommendedProjects = projectRecommendations[selectedJob] || [];
+
+    res.render("projects", {
+      username: user.username,
+      userId: user._id,
+      recommendedProjects,
+      selectedJob
+    });
+  } catch (error) {
+    console.error("Error fetching user or rendering projects page:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 // Handle logout
 app.get("/logout", (req, res) => {
