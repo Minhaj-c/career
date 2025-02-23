@@ -105,6 +105,12 @@
       .drop-out-btn:hover {
         background-color: #c82333; /* Darker red on hover */
       }
+      .quiz-active #goalSettingSection {
+        display: none;
+      }
+
+
+      
     </style>
   </head>
   <body>
@@ -251,9 +257,11 @@
         // Reset quiz state
         selectedAnswers = {};
 
+        document.body.classList.add("quiz-active");
         weeklyContent.style.display = "none";
         quizContainer.style.display = "block";
         quizResult.style.display = "none";
+
 
         const quiz = weeks[week - 1].quiz;
         document.getElementById("quizTitle").textContent = `Week ${week} Quiz`;
@@ -399,6 +407,7 @@
       }
 
       function closeQuiz() {
+        document.body.classList.remove("quiz-active");
         document.getElementById("quizContainer").style.display = "none";
         document.getElementById("quizResult").style.display = "none";
         document.getElementById("weeklyContent").style.display = "block";
