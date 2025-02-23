@@ -245,54 +245,57 @@
       });
 
       function startQuiz(week) {
-        if (!weeks || !weeks[week - 1] || !weeks[week - 1].quiz) {
-          console.error("Quiz data not found for week:", week);
-          return;
-        }
+  if (!weeks || !weeks[week - 1] || !weeks[week - 1].quiz) {
+    console.error("Quiz data not found for week:", week);
+    return;
+  }
 
-        const weeklyContent = document.getElementById("weeklyContent");
-        const quizContainer = document.getElementById("quizContainer");
-        const quizResult = document.getElementById("quizResult");
+  const weeklyContent = document.getElementById("weeklyContent");
+  const quizContainer = document.getElementById("quizContainer");
+  const quizResult = document.getElementById("quizResult");
 
-        // Reset quiz state
-        selectedAnswers = {};
+  // Reset quiz state
+  selectedAnswers = {};
 
-        document.body.classList.add("quiz-active");
-        weeklyContent.style.display = "none";
-        quizContainer.style.display = "block";
-        quizResult.style.display = "none";
+  document.body.classList.add("quiz-active");
+  weeklyContent.style.display = "none";
+  quizContainer.style.display = "block";
+  quizResult.style.display = "none";
 
+  const quiz = weeks[week - 1].quiz;
+  document.getElementById("quizTitle").textContent = `Week ${week} Quiz`;
 
-        const quiz = weeks[week - 1].quiz;
-        document.getElementById("quizTitle").textContent = `Week ${week} Quiz`;
+  // Randomly select 5 questions
+  const randomQuestions = quiz.questions
+    .sort(() => 0.5 - Math.random()) // Shuffle the questions
+    .slice(0, 5); // Select the first 5 questions
 
-        // Clear and render new questions
-        const questionsContainer = document.getElementById("quizQuestions");
-        questionsContainer.innerHTML = quiz.questions
-          .map(
-            (q, index) => `
-                <div class="quiz-question">
-                    <p><strong>Question ${index + 1}: ${q.question}</strong></p>
-                    <div class="quiz-options">
-                        ${q.options
-                          .map(
-                            (opt, optIndex) => `
-                            <div class="quiz-option" 
-                                 onclick="selectAnswer(${index}, ${optIndex})"
-                                 data-question="${index}"
-                                 data-option="${optIndex}">
-                                ${opt}
-                            </div>
-                        `
-                          )
-                          .join("")}
-                    </div>
-                </div>
-            `
-          )
-          .join("");
-      }
-
+  // Clear and render new questions
+  const questionsContainer = document.getElementById("quizQuestions");
+  questionsContainer.innerHTML = randomQuestions
+    .map(
+      (q, index) => `
+          <div class="quiz-question">
+              <p><strong>Question ${index + 1}: ${q.question}</strong></p>
+              <div class="quiz-options">
+                  ${q.options
+                    .map(
+                      (opt, optIndex) => `
+                      <div class="quiz-option" 
+                           onclick="selectAnswer(${index}, ${optIndex})"
+                           data-question="${index}"
+                           data-option="${optIndex}">
+                          ${opt}
+                      </div>
+                  `
+                    )
+                    .join("")}
+              </div>
+          </div>
+      `
+    )
+    .join("");
+}
       function selectAnswer(questionIndex, optionIndex) {
         selectedAnswers[questionIndex] = optionIndex;
 
@@ -315,71 +318,75 @@
       }
 
       
-  async function submitQuiz() {
-    if (currentWeek === null || !weeks[currentWeek - 1].quiz) {
-      console.error("Invalid quiz state");
-      return;
+      async function submitQuiz() {
+  if (currentWeek === null || !weeks[currentWeek - 1].quiz) {
+    console.error("Invalid quiz state");
+    return;
+  }
+
+  const quiz = weeks[currentWeek - 1].quiz;
+  const randomQuestions = quiz.questions
+    .sort(() => 0.5 - Math.random())
+    .slice(0, 5);
+
+  let score = 0;
+  const totalQuestions = randomQuestions.length;
+
+  // Validate all questions are answered
+  if (Object.keys(selectedAnswers).length < totalQuestions) {
+    alert("Please answer all questions before submitting.");
+    return;
+  }
+
+  // Calculate score
+  randomQuestions.forEach((q, index) => {
+    if (selectedAnswers[index] === q.correctAnswer) {
+      score++;
     }
+  });
 
-    const quiz = weeks[currentWeek - 1].quiz;
-    let score = 0;
-    const totalQuestions = quiz.questions.length;
+  const percentage = (score / totalQuestions) * 100;
 
-    // Validate all questions are answered
-    if (Object.keys(selectedAnswers).length < totalQuestions) {
-      alert("Please answer all questions before submitting.");
-      return;
-    }
-
-    // Calculate score
-    quiz.questions.forEach((q, index) => {
-      if (selectedAnswers[index] === q.correctAnswer) {
-        score++;
-      }
+  try {
+    const response = await fetch("/api/progress/quiz", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: document.querySelector('[name="userId"]').value,
+        week: currentWeek,
+        score: percentage,
+        job: document.querySelector('[name="job"]').value,
+      }),
     });
 
-    const percentage = (score / totalQuestions) * 100;
-
-    try {
-      const response = await fetch("/api/progress/quiz", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: document.querySelector('[name="userId"]').value,
-          week: currentWeek,
-          score: percentage,
-          job: document.querySelector('[name="job"]').value,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save quiz progress");
-      }
-
-      const result = await response.json();
-      if (result.success) {
-        displayQuizResult(percentage);
-
-        // Check if all weeks are completed
-        if (result.allWeeksCompleted) {
-          const congratulationsDiv = document.createElement("div");
-          congratulationsDiv.innerHTML = `
-            <div style="margin: 20px; padding: 20px; background-color: #e8f5e9; border: 1px solid #4CAF50; border-radius: 8px;">
-              <h2>🎉 Congratulations! 🎉</h2>
-              <p>You have successfully completed all weeks in the roadmap for <strong>${document.querySelector('[name="job"]').value}</strong>.</p>
-              <p>Keep up the great work and continue learning!</p>
-            </div>
-          `;
-          document.querySelector("main").appendChild(congratulationsDiv);
-        }
-      }
-    } catch (error) {
-      console.error("Error submitting quiz:", error);
-      alert("Error saving quiz progress. Please try again.");
+    if (!response.ok) {
+      throw new Error("Failed to save quiz progress");
     }
+
+    const result = await response.json();
+    if (result.success) {
+      displayQuizResult(percentage);
+
+      // Check if all weeks are completed
+      if (result.allWeeksCompleted) {
+        const congratulationsDiv = document.createElement("div");
+        congratulationsDiv.innerHTML = `
+          <div style="margin: 20px; padding: 20px; background-color: #e8f5e9; border: 1px solid #4CAF50; border-radius: 8px;">
+            <h2>🎉 Congratulations! 🎉</h2>
+            <p>You have successfully completed all weeks in the roadmap for <strong>${document.querySelector('[name="job"]').value}</strong>.</p>
+            <p>Keep up the great work and continue learning!</p>
+          </div>
+        `;
+        document.querySelector("main").appendChild(congratulationsDiv);
+      }
+    }
+  } catch (error) {
+    console.error("Error submitting quiz:", error);
+    alert("Error saving quiz progress. Please try again.");
   }
+}
 
 
       function displayQuizResult(score) {
