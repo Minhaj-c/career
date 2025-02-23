@@ -15,6 +15,8 @@ import { jobRecommendations, defaultRecommendations } from './models/jobRecommen
 dotenv.config();
 connectDB();
 
+
+
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
