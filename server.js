@@ -614,6 +614,10 @@ app.get("/roadmap/:userId", async (req, res) => {
 
     const progress = user.weeklyProgress.get(job);
 
+    // Check if all weeks are completed
+    const totalWeeks = jobContent.weeks.length;
+    const allWeeksCompleted = progress.completedWeeks.length === totalWeeks;
+
     res.render("roadmap", {
       username: user.username,
       userId: user._id,
@@ -623,14 +627,14 @@ app.get("/roadmap/:userId", async (req, res) => {
         completedWeeks: progress.completedWeeks,
         unlockedWeeks: progress.unlockedWeeks,
       },
-      totalWeeks: jobContent.weeks.length,
+      totalWeeks, // Pass total weeks to the template
+      allWeeksCompleted, // Pass whether all weeks are completed
     });
   } catch (error) {
     console.error("Error fetching roadmap:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 app.post("/api/progress/quiz", async (req, res) => {
   const { userId, week, score, job } = req.body;
 
@@ -660,12 +664,22 @@ app.post("/api/progress/quiz", async (req, res) => {
     user.weeklyProgress.set(job, progress);
     await user.save();
 
-    res.json({ success: true, progress });
+    // Check if all weeks are completed
+    const jobContent = weeklyContent[job];
+    const totalWeeks = jobContent.weeks.length;
+    const allWeeksCompleted = progress.completedWeeks.length === totalWeeks;
+
+    res.json({ 
+      success: true, 
+      progress,
+      allWeeksCompleted, // Return whether all weeks are completed
+    });
   } catch (error) {
     console.error("Error saving quiz progress:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
 
 app.get("/your-interests/:userId", async (req, res) => {
   const { userId } = req.params;

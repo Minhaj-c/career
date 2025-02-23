@@ -209,6 +209,14 @@
         </button>
       </div>
       
+      <!-- Add this section at the end of the <main> tag in roadmap.ejs -->
+<% if (user.completedWeeks.length === totalWeeks) { %>
+  <div id="congratulations" style="margin: 20px; padding: 20px; background-color: #e8f5e9; border: 1px solid #4CAF50; border-radius: 8px;">
+    <h2>🎉 Congratulations! 🎉</h2>
+    <p>You have successfully completed all weeks in the roadmap for <strong><%= roadmap.job %></strong>.</p>
+    <p>Keep up the great work and continue learning!</p>
+  </div>
+<% } %>
       
     </main>
 
@@ -298,58 +306,73 @@
         }
       }
 
-      async function submitQuiz() {
-        if (currentWeek === null || !weeks[currentWeek - 1].quiz) {
-          console.error("Invalid quiz state");
-          return;
-        }
+      
+  async function submitQuiz() {
+    if (currentWeek === null || !weeks[currentWeek - 1].quiz) {
+      console.error("Invalid quiz state");
+      return;
+    }
 
-        const quiz = weeks[currentWeek - 1].quiz;
-        let score = 0;
-        const totalQuestions = quiz.questions.length;
+    const quiz = weeks[currentWeek - 1].quiz;
+    let score = 0;
+    const totalQuestions = quiz.questions.length;
 
-        // Validate all questions are answered
-        if (Object.keys(selectedAnswers).length < totalQuestions) {
-          alert("Please answer all questions before submitting.");
-          return;
-        }
+    // Validate all questions are answered
+    if (Object.keys(selectedAnswers).length < totalQuestions) {
+      alert("Please answer all questions before submitting.");
+      return;
+    }
 
-        // Calculate score
-        quiz.questions.forEach((q, index) => {
-          if (selectedAnswers[index] === q.correctAnswer) {
-            score++;
-          }
-        });
+    // Calculate score
+    quiz.questions.forEach((q, index) => {
+      if (selectedAnswers[index] === q.correctAnswer) {
+        score++;
+      }
+    });
 
-        const percentage = (score / totalQuestions) * 100;
+    const percentage = (score / totalQuestions) * 100;
 
-        try {
-          const response = await fetch("/api/progress/quiz", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId: document.querySelector('[name="userId"]').value,
-              week: currentWeek,
-              score: percentage,
-              job: document.querySelector('[name="job"]').value,
-            }),
-          });
+    try {
+      const response = await fetch("/api/progress/quiz", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: document.querySelector('[name="userId"]').value,
+          week: currentWeek,
+          score: percentage,
+          job: document.querySelector('[name="job"]').value,
+        }),
+      });
 
-          if (!response.ok) {
-            throw new Error("Failed to save quiz progress");
-          }
+      if (!response.ok) {
+        throw new Error("Failed to save quiz progress");
+      }
 
-          const result = await response.json();
-          if (result.success) {
-            displayQuizResult(percentage);
-          }
-        } catch (error) {
-          console.error("Error submitting quiz:", error);
-          alert("Error saving quiz progress. Please try again.");
+      const result = await response.json();
+      if (result.success) {
+        displayQuizResult(percentage);
+
+        // Check if all weeks are completed
+        if (result.allWeeksCompleted) {
+          const congratulationsDiv = document.createElement("div");
+          congratulationsDiv.innerHTML = `
+            <div style="margin: 20px; padding: 20px; background-color: #e8f5e9; border: 1px solid #4CAF50; border-radius: 8px;">
+              <h2>🎉 Congratulations! 🎉</h2>
+              <p>You have successfully completed all weeks in the roadmap for <strong>${document.querySelector('[name="job"]').value}</strong>.</p>
+              <p>Keep up the great work and continue learning!</p>
+            </div>
+          `;
+          document.querySelector("main").appendChild(congratulationsDiv);
         }
       }
+    } catch (error) {
+      console.error("Error submitting quiz:", error);
+      alert("Error saving quiz progress. Please try again.");
+    }
+  }
+
 
       function displayQuizResult(score) {
         const quizContainer = document.getElementById("quizContainer");
