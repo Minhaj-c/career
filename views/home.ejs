@@ -17,6 +17,20 @@
         .community-button:hover {
             background-color: #45a049; /* Darker green on hover */
         }
+
+        .skill-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        .skill-button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -29,6 +43,9 @@
         <% if (hasSelectedJobs) { %>
             <button onclick="window.location.href='/your-interests/<%= userId %>'">Your Interest</button>
             <button onclick="window.location.href='/progress/<%= userId %>'">Your Progress</button>
+            <div style="margin-top: 30px;">
+                <button class="skill-button" onclick="window.location.href='/improve-skills/<%= userId %>'">Improve Your Skills</button>
+            </div>
         <% } else { %>
             <button onclick="window.location.href='/recommendations/<%= userId %>'">Recommended for You</button>
         <% } %>
@@ -40,5 +57,40 @@
             <button class="community-button" onclick="window.location.href='/community/<%= userId %>'">Join the Community</button>
         </div>
     </main>
+    <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        fetchSkillRecommendations();
+    });
+
+    async function fetchSkillRecommendations() {
+        try {
+            const response = await fetch('/api/skill-recommendations/<%= userId %>');
+            const data = await response.json();
+            
+            // Update certifications section
+            const certificationsHtml = data.certifications.map(cert => `
+                <div class="resource-item">
+                    <h4>${cert.title}</h4>
+                    <p>${cert.description}</p>
+                    <a href="${cert.link}" target="_blank" class="resource-link">Learn More →</a>
+                </div>
+            `).join('');
+            document.getElementById('certificationsList').innerHTML = certificationsHtml;
+
+            // Update resources section
+            const resourcesHtml = data.freeResources.map(resource => `
+                <div class="resource-item">
+                    <h4>${resource.title}</h4>
+                    <p>${resource.description}</p>
+                    <a href="${resource.link}" target="_blank" class="resource-link">Start Learning →</a>
+                </div>
+            `).join('');
+            document.getElementById('resourcesList').innerHTML = resourcesHtml;
+        } catch (error) {
+            console.error('Error fetching skill recommendations:', error);
+        }
+    }
+</script>
+
 </body>
 </html>

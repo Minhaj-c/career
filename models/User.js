@@ -35,7 +35,17 @@ const userSchema = new mongoose.Schema(
         quizScores: Map
       },
       default: new Map()
-    }
+    },
+    completedCourses: [{
+      courseTitle: String,
+      completionDate: Date,
+      certificateUrl: String
+    }],
+    inProgressCourses: [{
+      courseTitle: String,
+      startDate: Date,
+      progress: Number // percentage completed
+    }]
 
     
   },

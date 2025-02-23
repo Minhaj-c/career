@@ -10,6 +10,7 @@ import fs from "fs";
 import { recommendations } from "./models/recommendations.js";
 import { weeklyContent } from "./models/week.js";
 import Post from "./models/Community.js";
+import { jobRecommendations, defaultRecommendations } from './models/jobRecommendations.js';
 
 dotenv.config();
 connectDB();
@@ -849,6 +850,48 @@ app.post("/add-comment/:postId/:userId", async (req, res) => {
     res.status(500).send("Error adding comment.");
   }
 });
+
+app.get("/api/skill-recommendations/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+      const user = await User.findById(userId);
+      if (!user || !user.selectedJobs || user.selectedJobs.length === 0) {
+          return res.status(400).json({ message: "No selected jobs found" });
+      }
+
+      const selectedJob = user.selectedJobs[0];
+      
+      // Get recommendations for the selected job, or provide default recommendations
+      const recommendations = jobRecommendations[selectedJob] || defaultRecommendations;
+
+      res.json(recommendations);
+  } catch (error) {
+      console.error("Error fetching skill recommendations:", error.message);
+      res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/improve-skills/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(400).json({ message: "User not found" });
+      }
+
+      const selectedJob = user.selectedJobs[0] || "No job selected";
+
+      res.render("improve-skills", {
+          username: user.username,
+          userId: user._id,
+          selectedJob: selectedJob
+      });
+  } catch (error) {
+      console.error("Error fetching user:", error.message);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 
 // Handle logout
 app.get("/logout", (req, res) => {
