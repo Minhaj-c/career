@@ -4,25 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        /* Post Card Styles */
+        .post-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .post-card p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .post-card small {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .post-card h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        .comment-card {
+            background-color: #f9f9f9;
+            border-left: 3px solid #4CAF50;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .comment-card p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .comment-card small {
+            color: #999;
+            font-size: 12px;
+        }
+
+        /* Form Styles */
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* No Posts Message */
+        .no-posts {
+            text-align: center;
+            color: #777;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        /* Go Back Button */
+        .go-back-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .go-back-button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <header>
-        <img src="/uploads/<%= profilePic %>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;" onclick="window.location.href='/dashboard/<%= userId %>'">
+        <img src="/uploads/<%= profilePic %>" alt="Profile Picture" onclick="window.location.href='/dashboard/<%= userId %>'">
         <h1>Welcome to the Community, <%= username %>!</h1>
     </header>
 
     <main>
+        <!-- Go Back to Home Button -->
+        
+
+        <!-- Start a New Discussion -->
+        <h2>Start a New Discussion</h2>
+        <form action="/create-post/<%= userId %>" method="POST">
+            <textarea name="content" rows="4" placeholder="Share your thoughts..."></textarea>
+            <br>
+            <button type="submit">Post</button>
+        </form>
+
+        <!-- Recent Discussions -->
         <h2>Recent Discussions</h2>
         <div id="forum-posts">
             <% if (posts.length > 0) { %>
                 <% posts.forEach(post => { %>
-                    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                    <div class="post-card">
                         <p><strong><%= post.username %>:</strong> <%= post.content %></p>
                         <small>Posted on: <%= post.createdAt.toLocaleString() %></small>
                         <h3>Comments:</h3>
                         <% if (post.comments.length > 0) { %>
                             <% post.comments.forEach(comment => { %>
-                                <div style="margin-left: 20px;">
+                                <div class="comment-card">
                                     <p><strong><%= comment.username %>:</strong> <%= comment.content %></p>
                                     <small>Commented on: <%= comment.createdAt.toLocaleString() %></small>
                                 </div>
@@ -31,23 +179,18 @@
                             <p>No comments yet.</p>
                         <% } %>
                         <form action="/add-comment/<%= post._id %>/<%= userId %>" method="POST">
-                            <textarea name="comment" rows="2" cols="50" placeholder="Add a comment..."></textarea>
+                            <textarea name="comment" rows="2" placeholder="Add a comment..."></textarea>
                             <br>
                             <button type="submit">Comment</button>
                         </form>
                     </div>
                 <% }) %>
             <% } else { %>
-                <p>No posts yet. Be the first to share!</p>
+                <p class="no-posts">No posts yet. Be the first to share!</p>
             <% } %>
         </div>
-
-        <h2>Start a New Discussion</h2>
-        <form action="/create-post/<%= userId %>" method="POST">
-            <textarea name="content" rows="4" cols="50" placeholder="Share your thoughts..."></textarea>
-            <br>
-            <button type="submit">Post</button>
-        </form>
+        <button class="go-back-button" onclick="window.location.href='/home/<%= userId %>'">Go Back to Home</button>
     </main>
+   
 </body>
 </html>
