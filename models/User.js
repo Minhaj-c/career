@@ -45,7 +45,15 @@ const userSchema = new mongoose.Schema(
       courseTitle: String,
       startDate: Date,
       progress: Number // percentage completed
-    }]
+    }],
+
+    learningGoal: {
+      targetMonths: Number,
+      startDate: Date,
+      requiredHoursPerWeek: Number,
+      totalWeeks: Number,
+      completedWeeks: Number
+    }
 
     
   },

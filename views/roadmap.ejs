@@ -119,7 +119,30 @@
         Welcome <%= username %>! Follow this structured learning path to achieve
         your career goals.
       </p>
-      <!-- "Go Back to Home" button -->
+      <div id="goalSettingSection" style="margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+        <h2>Learning Goal Setting</h2>
+        <div id="currentGoal" style="display: none;">
+          <h3>Your Current Goal</h3>
+          <p>Target completion: <span id="targetMonths"></span> months</p>
+          <p>Required study time: <span id="requiredHours"></span> hours per week</p>
+          <p>Progress: <span id="progressPercent"></span>%</p>
+          <div class="progress-bar" style="background: #eee; height: 20px; border-radius: 10px; margin: 10px 0;">
+            <div id="progressBar" style="background: #4CAF50; height: 100%; border-radius: 10px; width: 0%; transition: width 0.5s;"></div>
+          </div>
+        </div>
+        
+        <div id="setGoalForm">
+          <p>Set your target completion time:</p>
+          <select id="targetMonthsSelect" style="padding: 8px; margin-right: 10px;">
+            <option value="3">3 months</option>
+            <option value="6">6 months</option>
+            <option value="9">9 months</option>
+            <option value="12">12 months</option>
+          </select>
+          <button onclick="setGoal()" class="start-quiz-btn">Set Goal</button>
+        </div>
+      </div>
+      
     </header>
 
     <main>
@@ -385,6 +408,54 @@
           alert("Error dropping out. Please try again.");
         }
       }
+
+      async function setGoal() {
+    const targetMonths = document.getElementById('targetMonthsSelect').value;
+    const userId = document.querySelector('[name="userId"]').value;
+
+    try {
+      const response = await fetch('/api/set-goal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userId, targetMonths })
+      });
+
+      if (!response.ok) throw new Error('Failed to set goal');
+      
+      const result = await response.json();
+      if (result.success) {
+        loadGoalProgress();
+      }
+    } catch (error) {
+      console.error('Error setting goal:', error);
+      alert('Error setting goal. Please try again.');
+    }
+  }
+
+  async function loadGoalProgress() {
+    const userId = document.querySelector('[name="userId"]').value;
+
+    try {
+      const response = await fetch(`/api/goal-progress/${userId}`);
+      if (!response.ok) throw new Error('Failed to load goal progress');
+      
+      const data = await response.json();
+      if (data.hasGoal) {
+        document.getElementById('currentGoal').style.display = 'block';
+        document.getElementById('targetMonths').textContent = data.targetMonths;
+        document.getElementById('requiredHours').textContent = data.requiredHoursPerWeek;
+        document.getElementById('progressPercent').textContent = data.progress;
+        document.getElementById('progressBar').style.width = `${data.progress}%`;
+      }
+    } catch (error) {
+      console.error('Error loading goal progress:', error);
+    }
+  }
+
+  // Load goal progress when page loads
+  document.addEventListener('DOMContentLoaded', loadGoalProgress);
     </script>
   </body>
 </html>

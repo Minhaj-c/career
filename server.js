@@ -894,6 +894,85 @@ app.get("/improve-skills/:userId", async (req, res) => {
   }
 });
 
+app.post("/api/set-goal", async (req, res) => {
+  const { userId, targetMonths } = req.body;
+  
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Calculate required hours per week based on total roadmap content
+    const selectedJob = user.selectedJobs[0];
+    const jobContent = weeklyContent[selectedJob];
+    const totalWeeks = jobContent.weeks.length;
+    
+    // Convert months to weeks
+    const targetWeeks = targetMonths * 4;
+    
+    // Assume each week requires 10 hours of study (adjust as needed)
+    const baseHoursPerWeek = 10;
+    const totalHours = totalWeeks * baseHoursPerWeek;
+    
+    // Calculate required hours per week to meet the goal
+    const requiredHoursPerWeek = Math.ceil(totalHours / targetWeeks);
+
+    // Save goal information to user model
+    user.learningGoal = {
+      targetMonths,
+      startDate: new Date(),
+      requiredHoursPerWeek,
+      totalWeeks,
+      completedWeeks: user.weeklyProgress.get(selectedJob)?.completedWeeks.length || 0
+    };
+
+    await user.save();
+
+    res.json({ 
+      success: true, 
+      requiredHoursPerWeek,
+      totalWeeks,
+      targetWeeks 
+    });
+  } catch (error) {
+    console.error("Error setting goal:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Add this route to get goal progress
+app.get("/api/goal-progress/:userId", async (req, res) => {
+  const { userId } = req.params;
+  
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.learningGoal) {
+      return res.json({ hasGoal: false });
+    }
+
+    const selectedJob = user.selectedJobs[0];
+    const completedWeeks = user.weeklyProgress.get(selectedJob)?.completedWeeks.length || 0;
+    const progress = (completedWeeks / user.learningGoal.totalWeeks) * 100;
+
+    res.json({
+      hasGoal: true,
+      targetMonths: user.learningGoal.targetMonths,
+      requiredHoursPerWeek: user.learningGoal.requiredHoursPerWeek,
+      progress: progress.toFixed(1),
+      completedWeeks,
+      totalWeeks: user.learningGoal.totalWeeks
+    });
+  } catch (error) {
+    console.error("Error getting goal progress:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 
 // Handle logout
 app.get("/logout", (req, res) => {
