@@ -1061,6 +1061,34 @@ app.post("/api/events/add", async (req, res) => {
 });
 
 
+// server.js
+app.delete("/api/events/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const deletedEvent = await Event.findByIdAndDelete(id);
+      if (!deletedEvent) {
+          return res.status(404).json({ message: "Event not found" });
+      }
+
+      res.json({ success: true, message: "Event deleted successfully" });
+  } catch (error) {
+      console.error("Error deleting event:", error.message);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// server.js
+app.get("/api/events", async (req, res) => {
+  try {
+      const events = await Event.find().sort({ date: 1 }); // Fetch all events and sort by date
+      res.json(events); // Send the events as a JSON response
+  } catch (error) {
+      console.error("Error fetching events:", error.message);
+      res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Handle logout
 app.get("/logout", (req, res) => {
   // Clear session or any authentication tokens
