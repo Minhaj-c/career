@@ -59,12 +59,19 @@
         >
           Learning resources
         </button>
-      </div>
+
+      </div>\
+
       <!-- home.ejs -->
 
       <button onclick="window.location.href='/projects/<%= userId %>'">
         Recommended Projects
       </button>
+      <div style="margin-top: 30px;">
+        <h2>Upcoming Events</h2>
+        <p>Check out the latest events and workshops!</p>
+        <button onclick="window.location.href='/events/<%= userId %>'">View Events</button>
+    </div>
       <% } else { %>
       <button onclick="window.location.href='/recommendations/<%= userId %>'">
         Recommended for You

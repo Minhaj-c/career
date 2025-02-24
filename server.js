@@ -12,6 +12,7 @@ import { weeklyContent } from "./models/week.js";
 import Post from "./models/Community.js";
 import { jobRecommendations, defaultRecommendations } from './models/jobRecommendations.js';
 import projectRecommendations from "./models/projectRecommendations.js";
+import Event from "./models/Event.js";
 
 dotenv.config();
 connectDB();
@@ -1011,6 +1012,54 @@ app.get("/projects/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
+
+
+
+
+// Route to display the events page
+app.get("/events/:userId", async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(400).json({ message: "User not found" });
+        }
+
+        // Fetch events from the database
+        const events = await Event.find().sort({ date: 1 }); // Sort by date
+
+        res.render("events", {
+            username: user.username,
+            userId: user._id,
+            events,
+        });
+    } catch (error) {
+        console.error("Error fetching events:", error.message);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+// Route to add a new event (for admin use)
+app.post("/api/events/add", async (req, res) => {
+    const { title, description, date, location, url } = req.body;
+
+    try {
+        const newEvent = new Event({
+            title,
+            description,
+            date,
+            location,
+            url,
+        });
+
+        await newEvent.save();
+        res.json({ success: true, message: "Event added successfully" });
+    } catch (error) {
+        console.error("Error adding event:", error.message);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
 
 // Handle logout
 app.get("/logout", (req, res) => {
