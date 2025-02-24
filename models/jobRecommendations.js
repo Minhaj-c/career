@@ -24,6 +24,11 @@ export const jobRecommendations = {
                 title: "The Odin Project",
                 description: "Open-source curriculum for learning full-stack development",
                 link: "https://www.theodinproject.com/"
+            },
+            {
+                title: "Bro code",
+                description: "Free code learning from youtube",
+                link: "https://youtu.be/xTtL8E4LzTQ?si=9VqHZUfjsCenfig3"
             }
         ]
     },
