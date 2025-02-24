@@ -15,9 +15,23 @@
       <p><strong>Salary:</strong> <%= fullJobDetails.salary %></p>
       <p><strong>Working Hours:</strong> <%= fullJobDetails.workingHours %></p>
       <p><strong>Description:</strong> <%= fullJobDetails.description %></p>
+      <% if (fullJobDetails.externalLinks) { %>
+        <h3>External Resources</h3>
+        <div class="resource-links">
+          <% Object.entries(fullJobDetails.externalLinks).forEach(([platform, link]) => { %>
+            <a href="<%= link %>" target="_blank"><%= platform.charAt(0).toUpperCase() + platform.slice(1) %></a>
+        <% }) %>
+        </div>
+  
+        <% } %>
+
     <% } else { %>
       <p>No detailed information available for this job.</p>
     <% } %>
+
+    
+    
+     
 
     <button onclick="window.location.href='/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>'">Back to Job Details</button>
   </main>

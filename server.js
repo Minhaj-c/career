@@ -7,7 +7,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import User from "./models/User.js";
 import fs from "fs";
-import { recommendations } from "./models/recommendations.js";
+import { recommendations , courseDetails } from "./models/recommendations.js";
 import { weeklyContent } from "./models/week.js";
 import Post from "./models/Community.js";
 import { jobRecommendations, defaultRecommendations } from './models/jobRecommendations.js';
@@ -354,37 +354,55 @@ app.get("/job-full-details/:job", async (req, res) => {
 
 app.get("/course-details/:course", (req, res) => {
   const course = decodeURIComponent(req.params.course);
-  let courseDetails = null;
+  
+  // Get course details from the courseDetails object we created
+  const courseInfo = courseDetails[course] || null;
+  
   let previousJob = null;
-
+  
   // Extract the previous job from the referrer (if available)
   if (req.headers.referer && req.headers.referer.includes("/job-details/")) {
     previousJob = req.headers.referer.split("/job-details/")[1];
   }
-
-  // Find the course details in your recommendations object
-  for (const level in recommendations) {
-    for (const skill in recommendations[level]) {
-      for (const field in recommendations[level][skill]) {
-        for (const interest in recommendations[level][skill][field]) {
-          const recommendation = recommendations[level][skill][field][interest];
-          recommendation.forEach((rec) => {
-            if (rec.courses.includes(course)) {
-              courseDetails = {
-                description: `Description for ${course}`, // Replace with actual description
-                modules: [`Module 1 of ${course}`, `Module 2 of ${course}`], // Replace with actual modules
-                jobs: rec.jobs,
-              };
-            }
-          });
+  
+  // If we don't have course details in our new structure, fall back to the old method
+  if (!courseInfo) {
+    let fallbackCourseDetails = null;
+    
+    // Find the course details in your recommendations object (your existing code)
+    for (const level in recommendations) {
+      for (const skill in recommendations[level]) {
+        for (const field in recommendations[level][skill]) {
+          for (const interest in recommendations[level][skill][field]) {
+            const recommendation = recommendations[level][skill][field][interest];
+            recommendation.forEach((rec) => {
+              if (rec.courses.includes(course)) {
+                fallbackCourseDetails = {
+                  description: `Description for ${course}`, // Replace with actual description
+                  modules: [`Module 1 of ${course}`, `Module 2 of ${course}`], // Replace with actual modules
+                  jobs: rec.jobs,
+                };
+              }
+            });
+          }
         }
       }
     }
+    
+    res.render("course-details", { 
+      course, 
+      courseDetails: fallbackCourseDetails, 
+      previousJob 
+    });
+  } else {
+    // Use our new courseDetails structure
+    res.render("course-details", { 
+      course, 
+      courseDetails: courseInfo, 
+      previousJob 
+    });
   }
-
-  res.render("course-details", { course, courseDetails, previousJob });
 });
-
 app.get("/dashboard/:userId", async (req, res) => {
   const { userId } = req.params;
   try {

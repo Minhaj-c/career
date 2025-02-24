@@ -4,19 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Details</title>
+  <style>
+    .job-item {
+      margin-bottom: 8px;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>Job Details for <%= job %></h1>
   </header>
-
+  
   <main>
     <% if (jobDetails) { %>
       <% if (jobDetails.courses && jobDetails.courses.length > 0) { %>
         <h3>Courses</h3>
         <ul>
           <% jobDetails.courses.forEach(course => { %>
-            <li><a href="/course-details/<%= encodeURIComponent(course) %>"><%= course %></a></li>
+            <li class="job-item"><a href="/course-details/<%= encodeURIComponent(course) %>"><%= course %></a></li>
           <% }) %>
         </ul>
       <% } %>
@@ -25,7 +30,7 @@
         <h3>Job Opportunities</h3>
         <ul>
           <% jobDetails.jobs.forEach(job => { %>
-            <li>
+            <li class="job-item">
               <a href="/job-full-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>">
                 <%= job %>
               </a>
@@ -36,7 +41,7 @@
     <% } else { %>
       <p>No details found for this job.</p>
     <% } %>
-
+    
     <button onclick="window.location.href='/recommendations/<%= user._id %>'">Back to Recommendations</button>
   </main>
 </body>
