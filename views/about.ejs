@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About - Career Guidance</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      header {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+      }
+
+      .profile-pic-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+
+      .profile-pic-container:hover .dropdown-content {
+        display: block;
+      }
+
+      main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        color: #4caf50;
+        margin-bottom: 20px;
+      }
+
+      p {
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
+
+      .team-section {
+        margin-top: 30px;
+      }
+
+      .team-member {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .team-member img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-right: 20px;
+      }
+
+      .team-member h3 {
+        margin: 0;
+        font-size: 1.2rem;
+      }
+
+      .team-member p {
+        margin: 5px 0;
+        color: #777;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #4caf50;
+        color: white;
+        margin-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="profile-pic-container">
+        <img
+          src="/uploads/<%= profilePic %>"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+        <div class="dropdown-content">
+          <a href="/home/<%= userId %>">Home</a>
+          <a href="/dashboard/<%= userId %>">Dashboard</a>
+          <a href="/edit-profile/<%= userId %>">Profile</a>
+          <a href="/about/<%= userId %>">About</a>
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
+      <h1>About Career Guidance</h1>
+    </header>
+
+    <main>
+      <h2>Our Mission</h2>
+      <p>
+        At Career Guidance, our mission is to empower individuals to make informed career decisions and achieve their professional goals. We provide personalized career recommendations, learning resources, and community support to help you navigate your career journey.
+      </p>
+
+      <h2>What We Offer</h2>
+      <p>
+        - <strong>Personalized Career Recommendations:</strong> Discover career paths tailored to your skills, interests, and qualifications.<br>
+        - <strong>Learning Resources:</strong> Access courses, tutorials, and certifications to enhance your skills.<br>
+        - <strong>Community Support:</strong> Connect with others, ask questions, and share your career journey.<br>
+        - <strong>Progress Tracking:</strong> Monitor your development and milestone achievements.
+      </p>
+
+      <div class="team-section">
+        <h2>Meet Our Team</h2>
+        <div class="team-member">
+          <img src="https://via.placeholder.com/80" alt="Team Member 1" />
+          <div>
+            <h3>John Doe</h3>
+            <p>Founder & CEO</p>
+          </div>
+        </div>
+        <div class="team-member">
+          <img src="https://via.placeholder.com/80" alt="Team Member 2" />
+          <div>
+            <h3>Jane Smith</h3>
+            <p>Lead Developer</p>
+          </div>
+        </div>
+        <div class="team-member">
+          <img src="https://via.placeholder.com/80" alt="Team Member 3" />
+          <div>
+            <h3>Alice Johnson</h3>
+            <p>Career Advisor</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2023 Career Guidance. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

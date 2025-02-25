@@ -1109,6 +1109,25 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
+
+// Route for About page
+app.get("/about/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+    res.render("about", {
+      userId: user._id,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("Error fetching user or rendering about page:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 // Handle logout
 app.get("/logout", (req, res) => {
   // Clear session or any authentication tokens
