@@ -31,16 +31,63 @@
       .skill-button:hover {
         background-color: #45a049;
       }
+
+      /* Dropdown styles */
+      .profile-pic-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        transition: background-color 0.3s;
+      }
+
+      .dropdown-content a:hover {
+        background-color: #f1f1f1;
+      }
+
+      .profile-pic-container:hover .dropdown-content {
+        display: block;
+      }
     </style>
   </head>
   <body>
     <header>
-      <img
-        src="/uploads/<%= profilePic %>"
-        alt="Profile Picture"
-        style="width: 50px; height: 50px; border-radius: 50%"
-        onclick="window.location.href='/dashboard/<%= userId %>'"
-      />
+      <div class="profile-pic-container">
+        <img
+          src="/uploads/<%= profilePic %>"
+          alt="Profile Picture"
+          class="profile-pic"
+        />
+        <div class="dropdown-content">
+          <a href="/home/<%= userId %>">Home</a>
+          <a href="/dashboard/<%= userId %>">Dashboard</a>
+          <a href="/edit-profile/<%= userId %>">Profile</a>
+          <a href="/logout">Logout</a>
+        </div>
+      </div>
       <h1>Welcome, <%= username %>!</h1>
     </header>
 
@@ -59,10 +106,7 @@
         >
           Learning resources
         </button>
-
-      </div>\
-
-      <!-- home.ejs -->
+      </div>
 
       <button onclick="window.location.href='/projects/<%= userId %>'">
         Recommended Projects
@@ -71,7 +115,7 @@
         <h2>Upcoming Events</h2>
         <p>Check out the latest events and workshops!</p>
         <button onclick="window.location.href='/events/<%= userId %>'">View Events</button>
-    </div>
+      </div>
       <% } else { %>
       <button onclick="window.location.href='/recommendations/<%= userId %>'">
         Recommended for You

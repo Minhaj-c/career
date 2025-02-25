@@ -7,17 +7,18 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import User from "./models/User.js";
 import fs from "fs";
-import { recommendations , courseDetails } from "./models/recommendations.js";
+import { recommendations, courseDetails } from "./models/recommendations.js";
 import { weeklyContent } from "./models/week.js";
 import Post from "./models/Community.js";
-import { jobRecommendations, defaultRecommendations } from './models/jobRecommendations.js';
+import {
+  jobRecommendations,
+  defaultRecommendations,
+} from "./models/jobRecommendations.js";
 import projectRecommendations from "./models/projectRecommendations.js";
 import Event from "./models/Event.js";
 
 dotenv.config();
 connectDB();
-
-
 
 const app = express();
 
@@ -354,27 +355,28 @@ app.get("/job-full-details/:job", async (req, res) => {
 
 app.get("/course-details/:course", (req, res) => {
   const course = decodeURIComponent(req.params.course);
-  
+
   // Get course details from the courseDetails object we created
   const courseInfo = courseDetails[course] || null;
-  
+
   let previousJob = null;
-  
+
   // Extract the previous job from the referrer (if available)
   if (req.headers.referer && req.headers.referer.includes("/job-details/")) {
     previousJob = req.headers.referer.split("/job-details/")[1];
   }
-  
+
   // If we don't have course details in our new structure, fall back to the old method
   if (!courseInfo) {
     let fallbackCourseDetails = null;
-    
+
     // Find the course details in your recommendations object (your existing code)
     for (const level in recommendations) {
       for (const skill in recommendations[level]) {
         for (const field in recommendations[level][skill]) {
           for (const interest in recommendations[level][skill][field]) {
-            const recommendation = recommendations[level][skill][field][interest];
+            const recommendation =
+              recommendations[level][skill][field][interest];
             recommendation.forEach((rec) => {
               if (rec.courses.includes(course)) {
                 fallbackCourseDetails = {
@@ -388,18 +390,18 @@ app.get("/course-details/:course", (req, res) => {
         }
       }
     }
-    
-    res.render("course-details", { 
-      course, 
-      courseDetails: fallbackCourseDetails, 
-      previousJob 
+
+    res.render("course-details", {
+      course,
+      courseDetails: fallbackCourseDetails,
+      previousJob,
     });
   } else {
     // Use our new courseDetails structure
-    res.render("course-details", { 
-      course, 
-      courseDetails: courseInfo, 
-      previousJob 
+    res.render("course-details", {
+      course,
+      courseDetails: courseInfo,
+      previousJob,
     });
   }
 });
@@ -689,8 +691,8 @@ app.post("/api/progress/quiz", async (req, res) => {
     const totalWeeks = jobContent.weeks.length;
     const allWeeksCompleted = progress.completedWeeks.length === totalWeeks;
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       progress,
       allWeeksCompleted, // Return whether all weeks are completed
     });
@@ -699,7 +701,6 @@ app.post("/api/progress/quiz", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 
 app.get("/your-interests/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -890,47 +891,48 @@ app.post("/add-comment/:postId/:userId", async (req, res) => {
 app.get("/api/skill-recommendations/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
-      const user = await User.findById(userId);
-      if (!user || !user.selectedJobs || user.selectedJobs.length === 0) {
-          return res.status(400).json({ message: "No selected jobs found" });
-      }
+    const user = await User.findById(userId);
+    if (!user || !user.selectedJobs || user.selectedJobs.length === 0) {
+      return res.status(400).json({ message: "No selected jobs found" });
+    }
 
-      const selectedJob = user.selectedJobs[0];
-      
-      // Get recommendations for the selected job, or provide default recommendations
-      const recommendations = jobRecommendations[selectedJob] || defaultRecommendations;
+    const selectedJob = user.selectedJobs[0];
 
-      res.json(recommendations);
+    // Get recommendations for the selected job, or provide default recommendations
+    const recommendations =
+      jobRecommendations[selectedJob] || defaultRecommendations;
+
+    res.json(recommendations);
   } catch (error) {
-      console.error("Error fetching skill recommendations:", error.message);
-      res.status(500).json({ message: "Server error" });
+    console.error("Error fetching skill recommendations:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 app.get("/improve-skills/:userId", async (req, res) => {
   const { userId } = req.params;
   try {
-      const user = await User.findById(userId);
-      if (!user) {
-          return res.status(400).json({ message: "User not found" });
-      }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
-      const selectedJob = user.selectedJobs[0] || "No job selected";
+    const selectedJob = user.selectedJobs[0] || "No job selected";
 
-      res.render("improve-skills", {
-          username: user.username,
-          userId: user._id,
-          selectedJob: selectedJob
-      });
+    res.render("improve-skills", {
+      username: user.username,
+      userId: user._id,
+      selectedJob: selectedJob,
+    });
   } catch (error) {
-      console.error("Error fetching user:", error.message);
-      res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error fetching user:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
 app.post("/api/set-goal", async (req, res) => {
   const { userId, targetMonths } = req.body;
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -941,14 +943,14 @@ app.post("/api/set-goal", async (req, res) => {
     const selectedJob = user.selectedJobs[0];
     const jobContent = weeklyContent[selectedJob];
     const totalWeeks = jobContent.weeks.length;
-    
+
     // Convert months to weeks
     const targetWeeks = targetMonths * 4;
-    
+
     // Assume each week requires 10 hours of study (adjust as needed)
     const baseHoursPerWeek = 10;
     const totalHours = totalWeeks * baseHoursPerWeek;
-    
+
     // Calculate required hours per week to meet the goal
     const requiredHoursPerWeek = Math.ceil(totalHours / targetWeeks);
 
@@ -958,16 +960,17 @@ app.post("/api/set-goal", async (req, res) => {
       startDate: new Date(),
       requiredHoursPerWeek,
       totalWeeks,
-      completedWeeks: user.weeklyProgress.get(selectedJob)?.completedWeeks.length || 0
+      completedWeeks:
+        user.weeklyProgress.get(selectedJob)?.completedWeeks.length || 0,
     };
 
     await user.save();
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       requiredHoursPerWeek,
       totalWeeks,
-      targetWeeks 
+      targetWeeks,
     });
   } catch (error) {
     console.error("Error setting goal:", error.message);
@@ -978,7 +981,7 @@ app.post("/api/set-goal", async (req, res) => {
 // Add this route to get goal progress
 app.get("/api/goal-progress/:userId", async (req, res) => {
   const { userId } = req.params;
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -990,7 +993,8 @@ app.get("/api/goal-progress/:userId", async (req, res) => {
     }
 
     const selectedJob = user.selectedJobs[0];
-    const completedWeeks = user.weeklyProgress.get(selectedJob)?.completedWeeks.length || 0;
+    const completedWeeks =
+      user.weeklyProgress.get(selectedJob)?.completedWeeks.length || 0;
     const progress = (completedWeeks / user.learningGoal.totalWeeks) * 100;
 
     res.json({
@@ -999,14 +1003,13 @@ app.get("/api/goal-progress/:userId", async (req, res) => {
       requiredHoursPerWeek: user.learningGoal.requiredHoursPerWeek,
       progress: progress.toFixed(1),
       completedWeeks,
-      totalWeeks: user.learningGoal.totalWeeks
+      totalWeeks: user.learningGoal.totalWeeks,
     });
   } catch (error) {
     console.error("Error getting goal progress:", error.message);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-
 
 app.get("/projects/:userId", async (req, res) => {
   const { userId } = req.params;
@@ -1023,87 +1026,86 @@ app.get("/projects/:userId", async (req, res) => {
       username: user.username,
       userId: user._id,
       recommendedProjects,
-      selectedJob
+      selectedJob,
     });
   } catch (error) {
-    console.error("Error fetching user or rendering projects page:", error.message);
+    console.error(
+      "Error fetching user or rendering projects page:",
+      error.message
+    );
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
-
-
-
 // Route to display the events page
 app.get("/events/:userId", async (req, res) => {
-    const { userId } = req.params;
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            return res.status(400).json({ message: "User not found" });
-        }
-
-        // Fetch events from the database
-        const events = await Event.find().sort({ date: 1 }); // Sort by date
-
-        res.render("events", {
-            username: user.username,
-            userId: user._id,
-            events,
-        });
-    } catch (error) {
-        console.error("Error fetching events:", error.message);
-        res.status(500).json({ message: "Server error", error: error.message });
+  const { userId } = req.params;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
+
+    // Fetch events from the database
+    const events = await Event.find().sort({ date: 1 }); // Sort by date
+
+    res.render("events", {
+      username: user.username,
+      userId: user._id,
+      events,
+    });
+  } catch (error) {
+    console.error("Error fetching events:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 // Route to add a new event (for admin use)
 app.post("/api/events/add", async (req, res) => {
-    const { title, description, date, location, url } = req.body;
+  const { title, description, date, location, url } = req.body;
 
-    try {
-        const newEvent = new Event({
-            title,
-            description,
-            date,
-            location,
-            url,
-        });
+  try {
+    const newEvent = new Event({
+      title,
+      description,
+      date,
+      location,
+      url,
+    });
 
-        await newEvent.save();
-        res.json({ success: true, message: "Event added successfully" });
-    } catch (error) {
-        console.error("Error adding event:", error.message);
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
+    await newEvent.save();
+    res.json({ success: true, message: "Event added successfully" });
+  } catch (error) {
+    console.error("Error adding event:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
-
 
 // server.js
 app.delete("/api/events/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-      const deletedEvent = await Event.findByIdAndDelete(id);
-      if (!deletedEvent) {
-          return res.status(404).json({ message: "Event not found" });
-      }
+    const deletedEvent = await Event.findByIdAndDelete(id);
+    if (!deletedEvent) {
+      return res.status(404).json({ message: "Event not found" });
+    }
 
-      res.json({ success: true, message: "Event deleted successfully" });
+    res.json({ success: true, message: "Event deleted successfully" });
   } catch (error) {
-      console.error("Error deleting event:", error.message);
-      res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error deleting event:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
 // server.js
 app.get("/api/events", async (req, res) => {
   try {
-      const events = await Event.find().sort({ date: 1 }); // Fetch all events and sort by date
-      res.json(events); // Send the events as a JSON response
+    const events = await Event.find().sort({ date: 1 }); // Fetch all events and sort by date
+    res.json(events); // Send the events as a JSON response
   } catch (error) {
-      console.error("Error fetching events:", error.message);
-      res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error fetching events:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 });
 
