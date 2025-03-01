@@ -245,7 +245,8 @@
         });
       });
 
-      function startQuiz(week) {
+     // First, let's fix the startQuiz function to properly handle click events
+function startQuiz(week) {
   if (!weeks || !weeks[week - 1] || !weeks[week - 1].quiz) {
     console.error("Quiz data not found for week:", week);
     return;
@@ -266,14 +267,14 @@
   const quiz = weeks[week - 1].quiz;
   document.getElementById("quizTitle").textContent = `Week ${week} Quiz`;
 
-  // Randomly select 5 questions
-  const randomQuestions = quiz.questions
+  // Randomly select 5 questions but SAVE them for later reference
+  window.quizQuestions = quiz.questions
     .sort(() => 0.5 - Math.random()) // Shuffle the questions
     .slice(0, 5); // Select the first 5 questions
 
   // Clear and render new questions
   const questionsContainer = document.getElementById("quizQuestions");
-  questionsContainer.innerHTML = randomQuestions
+  questionsContainer.innerHTML = window.quizQuestions
     .map(
       (q, index) => `
           <div class="quiz-question">
@@ -283,7 +284,6 @@
                     .map(
                       (opt, optIndex) => `
                       <div class="quiz-option" 
-                           onclick="selectAnswer(${index}, ${optIndex})"
                            data-question="${index}"
                            data-option="${optIndex}">
                           ${opt}
@@ -296,42 +296,47 @@
       `
     )
     .join("");
+
+  // Add event listeners to all option elements after they're in the DOM
+  const optionElements = document.querySelectorAll('.quiz-option');
+  optionElements.forEach(option => {
+    option.addEventListener('click', function() {
+      const questionIndex = this.getAttribute('data-question');
+      const optionIndex = this.getAttribute('data-option');
+      selectAnswer(parseInt(questionIndex), parseInt(optionIndex));
+    });
+  });
 }
-      function selectAnswer(questionIndex, optionIndex) {
-        selectedAnswers[questionIndex] = optionIndex;
 
-        // Update UI to show selection
-        const options = document.querySelectorAll(
-          `[data-question="${questionIndex}"]`
-        );
-        options.forEach((opt) => {
-          opt.parentElement.querySelectorAll(".quiz-option").forEach((o) => {
-            o.classList.remove("selected");
-          });
-        });
+// Keep the selectAnswer function the same
+function selectAnswer(questionIndex, optionIndex) {
+  selectedAnswers[questionIndex] = optionIndex;
 
-        const selectedOption = document.querySelector(
-          `[data-question="${questionIndex}"][data-option="${optionIndex}"]`
-        );
-        if (selectedOption) {
-          selectedOption.classList.add("selected");
-        }
-      }
+  // Update UI to show selection
+  const options = document.querySelectorAll(
+    `[data-question="${questionIndex}"]`
+  );
+  options.forEach((opt) => {
+    opt.classList.remove("selected");
+  });
 
-      
-      async function submitQuiz() {
-  if (currentWeek === null || !weeks[currentWeek - 1].quiz) {
+  const selectedOption = document.querySelector(
+    `[data-question="${questionIndex}"][data-option="${optionIndex}"]`
+  );
+  if (selectedOption) {
+    selectedOption.classList.add("selected");
+  }
+}
+
+// Keep the submitQuiz function as in the alternative solution
+async function submitQuiz() {
+  if (currentWeek === null || !weeks[currentWeek - 1].quiz || !window.quizQuestions) {
     console.error("Invalid quiz state");
     return;
   }
 
-  const quiz = weeks[currentWeek - 1].quiz;
-  const randomQuestions = quiz.questions
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 5);
-
   let score = 0;
-  const totalQuestions = randomQuestions.length;
+  const totalQuestions = window.quizQuestions.length;
 
   // Validate all questions are answered
   if (Object.keys(selectedAnswers).length < totalQuestions) {
@@ -339,12 +344,12 @@
     return;
   }
 
-  // Calculate score
-  randomQuestions.forEach((q, index) => {
-    if (selectedAnswers[index] === q.correctAnswer) {
+  // Calculate score using the SAVED questions
+  for (let i = 0; i < window.quizQuestions.length; i++) {
+    if (selectedAnswers[i] === window.quizQuestions[i].correctAnswer) {
       score++;
     }
-  });
+  }
 
   const percentage = (score / totalQuestions) * 100;
 
@@ -388,8 +393,6 @@
     alert("Error saving quiz progress. Please try again.");
   }
 }
-
-
       function displayQuizResult(score) {
         const quizContainer = document.getElementById("quizContainer");
         const resultDiv = document.getElementById("quizResult");
