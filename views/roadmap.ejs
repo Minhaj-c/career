@@ -4,113 +4,335 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weekly Career Roadmap</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-      .week-container {
-        border: 1px solid #ccc;
-        margin: 20px 0;
-        padding: 20px;
-        border-radius: 8px;
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+      :root {
+        --primary-color: #2a3990;
+        --secondary-color: #4e54c8;
+        --accent-color: #ff6b6b;
+        --background-color: #f8f9ff;
+        --card-color: #ffffff;
+        --text-color: #333344;
+        --light-text: #7b7b8f;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
+
+      /* Header styles */
+      header {
+        background-color: var(--card-color);
+        padding: 20px 30px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        font-size: 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+        position: relative;
+        display: inline-block;
+      }
+
+      header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+      }
+
+      header p {
+        font-size: 16px;
+        color: var(--light-text);
+      }
+
+      /* Main content styles */
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Goal Setting Section */
+      #goalSettingSection {
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+
+      #goalSettingSection h2 {
+        color: var(--primary-color);
+        font-size: 24px;
+        margin-bottom: 15px;
+      }
+
+      #goalSettingSection p {
+        margin: 10px 0;
+        color: var(--text-color);
+      }
+
+      #goalSettingSection select {
+        padding: 10px;
+        border: 1px solid rgba(78, 84, 200, 0.2);
+        border-radius: 10px;
+        font-size: 14px;
+        margin-right: 10px;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      /* Progress Bar */
+      .progress-bar {
+        background: #eee;
+        height: 20px;
+        border-radius: 10px;
+        margin: 10px 0;
+        overflow: hidden;
+      }
+
+      #progressBar {
+        background: var(--primary-color);
+        height: 100%;
+        border-radius: 10px;
+        width: 0%;
+        transition: width 0.5s;
+      }
+
+      /* Week Container */
+      .week-container {
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: var(--transition);
+      }
+
+      .week-container:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .week-container h2 {
+        color: var(--primary-color);
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .week-container p {
+        color: var(--text-color);
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .week-container ul {
+        margin: 10px 0;
+        padding-left: 20px;
+      }
+
+      .week-container li {
+        margin-bottom: 8px;
+        color: var(--text-color);
+      }
+
       .week-locked {
-        opacity: 0.5;
+        opacity: 0.6;
         pointer-events: none;
       }
+
       .week-completed {
-        border-color: #4caf50;
+        border-left: 5px solid var(--primary-color);
       }
-      .start-quiz-btn {
-        background-color: #007bff;
+
+      /* Buttons */
+      button {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         color: white;
-        padding: 10px 20px;
         border: none;
-        border-radius: 5px;
+        border-radius: 30px;
         cursor: pointer;
+        font-weight: 500;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(42, 57, 144, 0.2);
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
       }
-      .start-quiz-btn:hover {
-        background-color: #0056b3;
+
+      button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.6s;
       }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(42, 57, 144, 0.3);
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      .drop-out-btn {
+        background: var(--accent-color);
+        margin-top: 20px;
+      }
+
+      .go-home-btn {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        box-shadow: none;
+        margin-left: 10px;
+      }
+
+      .go-home-btn:hover {
+        background: rgba(42, 57, 144, 0.05);
+      }
+
+      /* Quiz Container */
       .quiz-container {
         display: none;
-        margin-top: 20px;
-        background-color: #fff;
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
         padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      .quiz-result {
-        display: none;
         margin-top: 20px;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
       }
-      .quiz-result.pass {
-        border-color: #4caf50;
-        background-color: #e8f5e9;
-      }
-      .quiz-result.fail {
-        border-color: #f44336;
-        background-color: #ffebee;
-      }
+
       .quiz-question {
         margin-bottom: 20px;
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
       }
+
+      .quiz-question p {
+        font-size: 16px;
+        color: var(--text-color);
+        margin-bottom: 10px;
+      }
+
       .quiz-options {
         display: flex;
         flex-direction: column;
         gap: 10px;
-        margin-top: 10px;
       }
+
       .quiz-option {
         padding: 12px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
+        border: 1px solid rgba(78, 84, 200, 0.2);
+        border-radius: 10px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: var(--transition);
       }
+
       .quiz-option:hover {
-        background-color: #f0f0f0;
+        background-color: rgba(78, 84, 200, 0.05);
       }
+
       .quiz-option.selected {
-        background-color: #007bff;
+        background-color: var(--primary-color);
         color: white;
-        border-color: #0056b3;
+        border-color: var(--primary-color);
       }
 
-      /* Style for the "Go Back to Home" button */
-      .go-home-btn {
-        background-color: #6c757d; /* Gray color */
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-      .go-home-btn:hover {
-        background-color: #5a6268; /* Darker gray on hover */
-      }
-      .drop-out-btn {
-        background-color: #dc3545; /* Red color */
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-      .drop-out-btn:hover {
-        background-color: #c82333; /* Darker red on hover */
-      }
-      .quiz-active #goalSettingSection {
+      /* Quiz Result */
+      .quiz-result {
         display: none;
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        margin-top: 20px;
       }
 
+      .quiz-result.pass {
+        border-left: 5px solid #4caf50;
+      }
 
-      
+      .quiz-result.fail {
+        border-left: 5px solid var(--accent-color);
+      }
+
+      /* Congratulations Section */
+      #congratulations {
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      #congratulations h2 {
+        color: var(--primary-color);
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+
+      #congratulations p {
+        color: var(--text-color);
+        font-size: 16px;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        header {
+          padding: 15px;
+        }
+
+        header h1 {
+          font-size: 24px;
+        }
+
+        main {
+          padding: 15px;
+        }
+
+        button {
+          width: 100%;
+          margin: 5px 0;
+        }
+
+        .go-home-btn {
+          margin-left: 0;
+        }
+      }
     </style>
   </head>
   <body>
@@ -120,43 +342,40 @@
     </script>
 
     <header>
-      
       <h1>Your Weekly Career Roadmap - <%= roadmap.job %></h1>
       <p>
         Welcome <%= username %>! Follow this structured learning path to achieve
         your career goals.
       </p>
-      <div id="goalSettingSection" style="margin: 20px 0; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
+      <div id="goalSettingSection">
         <h2>Learning Goal Setting</h2>
         <div id="currentGoal" style="display: none;">
           <h3>Your Current Goal</h3>
           <p>Target completion: <span id="targetMonths"></span> months</p>
           <p>Required study time: <span id="requiredHours"></span> hours per week</p>
           <p>Progress: <span id="progressPercent"></span>%</p>
-          <div class="progress-bar" style="background: #eee; height: 20px; border-radius: 10px; margin: 10px 0;">
-            <div id="progressBar" style="background: #4CAF50; height: 100%; border-radius: 10px; width: 0%; transition: width 0.5s;"></div>
+          <div class="progress-bar">
+            <div id="progressBar"></div>
           </div>
         </div>
-        
         <div id="setGoalForm">
           <p>Set your target completion time:</p>
-          <select id="targetMonthsSelect" style="padding: 8px; margin-right: 10px;">
+          <select id="targetMonthsSelect">
             <option value="3">3 months</option>
             <option value="6">6 months</option>
             <option value="9">9 months</option>
             <option value="12">12 months</option>
           </select>
-          <button onclick="setGoal()" class="start-quiz-btn">Set Goal</button>
+          <button onclick="setGoal()">Set Goal</button>
         </div>
       </div>
-      
     </header>
 
     <main>
       <!-- Add hidden fields -->
       <input type="hidden" name="userId" value="<%= userId %>" />
       <input type="hidden" name="job" value="<%= roadmap.job %>" />
-      
+
       <div id="weeklyContent">
         <% weeks.forEach((week, index) => { %>
         <div
@@ -177,7 +396,6 @@
             <li><%= task %></li>
             <% }) %>
           </ul>
-          
           <% if (user.unlockedWeeks.includes(index + 1) &&
           !user.completedWeeks.includes(index + 1)) { %>
           <button class="start-quiz-btn" data-week="<%= index + 1 %>">
@@ -187,47 +405,36 @@
         </div>
         <% }) %>
         <button onclick="dropOut()" class="drop-out-btn">Drop Out</button>
-        <button
-        onclick="window.location.href='/home/<%= userId %>'"
-        class="go-home-btn"
-      >
-        Go Back to Home
-      </button>
+        <button onclick="window.location.href='/home/<%= userId %>'" class="go-home-btn">
+          Go Back to Home
+        </button>
       </div>
 
       <div id="quizContainer" class="quiz-container">
         <h2 id="quizTitle"></h2>
         <div id="quizQuestions"></div>
-        <button class="start-quiz-btn" onclick="submitQuiz()">
-          Submit Quiz
-        </button>
-        <button class="start-quiz-btn" onclick="closeQuiz()">
-            Return to Roadmap
-          </button>
-
+        <button onclick="submitQuiz()">Submit Quiz</button>
+        <button onclick="closeQuiz()">Return to Roadmap</button>
       </div>
 
       <div id="quizResult" class="quiz-result">
         <h3>Quiz Result</h3>
         <p id="scoreDisplay"></p>
         <p id="resultMessage"></p>
-        <button class="start-quiz-btn" onclick="closeQuiz()">
-          Return to Roadmap
-        </button>
+        <button onclick="closeQuiz()">Return to Roadmap</button>
       </div>
-      
-      <!-- Add this section at the end of the <main> tag in roadmap.ejs -->
-<% if (user.completedWeeks.length === totalWeeks) { %>
-  <div id="congratulations" style="margin: 20px; padding: 20px; background-color: #e8f5e9; border: 1px solid #4CAF50; border-radius: 8px;">
-    <h2>🎉 Congratulations! 🎉</h2>
-    <p>You have successfully completed all weeks in the roadmap for <strong><%= roadmap.job %></strong>.</p>
-    <p>Keep up the great work and continue learning!</p>
-  </div>
-<% } %>
-      
+
+      <% if (user.completedWeeks.length === totalWeeks) { %>
+      <div id="congratulations">
+        <h2>🎉 Congratulations! 🎉</h2>
+        <p>You have successfully completed all weeks in the roadmap for <strong><%= roadmap.job %></strong>.</p>
+        <p>Keep up the great work and continue learning!</p>
+      </div>
+      <% } %>
     </main>
 
     <script>
+      // JavaScript code remains the same as provided earlier
       let currentWeek = null;
       let selectedAnswers = {};
 

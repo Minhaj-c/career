@@ -1,72 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recommendations</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        .job-checkbox {
-            margin-right: 10px;
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+      
+      :root {
+        --primary-color: #2a3990;
+        --secondary-color: #4e54c8;
+        --accent-color: #ff6b6b;
+        --background-color: #f8f9ff;
+        --card-color: #ffffff;
+        --text-color: #333344;
+        --light-text: #7b7b8f;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
+
+      /* Header styles */
+      header {
+        background-color: var(--card-color);
+        padding: 20px 30px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      header h1 {
+        font-size: 32px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+        position: relative;
+        display: inline-block;
+      }
+
+      header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+      }
+
+      /* Main content styles */
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      /* Form styles */
+      form {
+        background-color: var(--card-color);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+      }
+
+      h2 {
+        color: var(--primary-color);
+        font-size: 24px;
+        margin: 20px 0 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(78, 84, 200, 0.1);
+      }
+
+      h3 {
+        color: var(--text-color);
+        font-size: 18px;
+        margin: 15px 0 10px;
+        font-weight: 500;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 25px;
+      }
+
+      li {
+        margin-bottom: 12px;
+        padding: 8px 15px;
+        border-radius: 10px;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      li:hover {
+        background-color: rgba(78, 84, 200, 0.05);
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        font-weight: 400;
+        color: var(--text-color);
+      }
+
+      .job-checkbox {
+        margin-right: 15px;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--primary-color);
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .job-checkbox:checked {
+        background-color: var(--primary-color);
+      }
+
+      .job-checkbox:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 12px;
+      }
+
+      a {
+        color: var(--secondary-color);
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      a:hover {
+        color: var(--primary-color);
+        text-decoration: underline;
+      }
+
+      .error-message {
+        color: white;
+        display: none;
+        border: none;
+        background-color: var(--accent-color);
+        padding: 12px 20px;
+        margin: 20px 0;
+        border-radius: 10px;
+        font-weight: 500;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+      }
+
+      button {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(42, 57, 144, 0.2);
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+
+      button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.6s;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(42, 57, 144, 0.3);
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      button[type="submit"] {
+        margin-top: 15px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      button[type="submit"]::after {
+        content: '\f061';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-left: 8px;
+        font-size: 14px;
+      }
+
+      button[onclick] {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        box-shadow: none;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      button[onclick]::before {
+        content: '\f060';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-right: 8px;
+        font-size: 14px;
+      }
+
+      button[onclick]:hover {
+        background: rgba(42, 57, 144, 0.05);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(42, 57, 144, 0.1);
+      }
+
+      /* See Details button */
+      .see-details-button {
+        padding: 8px 16px;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: var(--transition);
+        font-size: 14px;
+      }
+
+      .see-details-button:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(78, 84, 200, 0.2);
+      }
+
+      /* Empty state */
+      p {
+        padding: 30px;
+        text-align: center;
+        color: var(--light-text);
+        font-size: 18px;
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        .error-message {
-            color: red;
-            display: none;
-            border: 1px solid red;
-            background-color: #f8d7da;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
+      }
+
+      form, p, button {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        header {
+          padding: 15px;
+        }
+        
+        header h1 {
+          font-size: 26px;
+        }
+        
+        main {
+          padding: 15px;
+        }
+        
+        form {
+          padding: 20px;
+        }
+        
+        h2 {
+          font-size: 20px;
+        }
+        
+        .buttons-container {
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+        }
+        
+        button {
+          width: 100%;
+          margin: 5px 0;
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Recommended for You, <%= user.username %></h1>
+      <h1>Recommended for You, <%= user.username %></h1>
     </header>
     
     <main>
-        <form action="/roadmap" method="POST" id="jobSelectionForm" onsubmit="return validateForm()">
-            <input type="hidden" name="userId" value="<%= user._id %>">
-            
-            <% if (userRecommendations.length > 0) { %>
-                <% userRecommendations.forEach((recommendation, index) => { %>
-                    <h2>Recommendation Set <%= index + 1 %></h2>
-                    <% if (recommendation.jobs && recommendation.jobs.length > 0) { %>
-                        <h3>Job Opportunities</h3>
-                        <ul>
-                            <% recommendation.jobs.forEach(job => { %>
-                                <li>
-                                    <label>
-                                        <input type="checkbox" name="selectedJobs" value="<%= job %>" class="job-checkbox">
-                                        <a href="/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>"><%= job %></a>
-                                    </label>
-                                </li>
-                            <% }) %>
-                        </ul>
-                    <% } %>
+      <form action="/roadmap" method="POST" id="jobSelectionForm" onsubmit="return validateForm()">
+        <input type="hidden" name="userId" value="<%= user._id %>">
+        
+        <% if (userRecommendations.length > 0) { %>
+          <% userRecommendations.forEach((recommendation, index) => { %>
+            <h2><i class="fas fa-thumbs-up"></i> Recommendation Set <%= index + 1 %></h2>
+            <% if (recommendation.jobs && recommendation.jobs.length > 0) { %>
+              <h3><i class="fas fa-briefcase"></i> Job Opportunities</h3>
+              <ul>
+                <% recommendation.jobs.forEach(job => { %>
+                  <li>
+                    <label>
+                      <input type="checkbox" name="selectedJobs" value="<%= job %>" class="job-checkbox">
+                      <span><%= job %></span>
+                    </label>
+                    <a href="/job-details/<%= encodeURIComponent(job) %>?userId=<%= user._id %>">
+                      <button type="button" class="see-details-button">See Details</button>
+                    </a>
+                  </li>
                 <% }) %>
-                <div id="error-message" class="error-message">Please select at least one job to generate a roadmap.</div>
-                <button type="submit">Generate Roadmap</button>
-            <% } else { %>
-                <p>No recommendations found based on your current skills, interests, and hobbies.</p>
+              </ul>
             <% } %>
-        </form>
-        <button onclick="window.location.href='/home/<%= user._id %>'">Go Back to Home</button>
+          <% }) %>
+          <div id="error-message" class="error-message">
+            <i class="fas fa-exclamation-circle"></i> Please select at least one job to generate a roadmap.
+          </div>
+          <div class="buttons-container">
+            <button type="submit"><i class="fas fa-map-marked-alt"></i> Generate Roadmap</button>
+          </div>
+        <% } else { %>
+          <p>No recommendations found based on your current skills, interests, and hobbies.</p>
+        <% } %>
+      </form>
+      <button onclick="window.location.href='/home/<%= user._id %>'">Go Back to Home</button>
     </main>
-
+    
     <script>
-        function validateForm() {
-            var checkboxes = document.querySelectorAll('input[name="selectedJobs"]:checked');
-            var errorMessage = document.getElementById("error-message");
-            
-            if (checkboxes.length === 0) {
-                errorMessage.style.display = "block";
-                return false;
-            } else {
-                errorMessage.style.display = "none";
-                return true;
-            }
+      function validateForm() {
+        var checkboxes = document.querySelectorAll('input[name="selectedJobs"]:checked');
+        var errorMessage = document.getElementById("error-message");
+        
+        if (checkboxes.length === 0) {
+          errorMessage.style.display = "block";
+          return false;
+        } else {
+          errorMessage.style.display = "none";
+          return true;
         }
+      }
     </script>
-</body>
+  </body>
 </html>

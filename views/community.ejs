@@ -1,196 +1,348 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        /* General Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+      :root {
+        --primary-color: #2a3990;
+        --secondary-color: #4e54c8;
+        --accent-color: #ff6b6b;
+        --background-color: #f8f9ff;
+        --card-color: #ffffff;
+        --text-color: #333344;
+        --light-text: #7b7b8f;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
+
+      /* Header styles */
+      header {
+        background-color: var(--card-color);
+        padding: 20px 30px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        position: relative;
+        margin-bottom: 40px;
+      }
+
+      header img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-bottom: 10px;
+        border: 2px solid var(--primary-color);
+        transition: var(--transition);
+      }
+
+      header img:hover {
+        transform: scale(1.1);
+        box-shadow: var(--hover-shadow);
+      }
+
+      header h1 {
+        font-size: 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 5px;
+        position: relative;
+        display: inline-block;
+      }
+
+      header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+      }
+
+      /* Main content styles */
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h2 {
+        color: var(--primary-color);
+        font-size: 24px;
+        margin: 20px 0 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(78, 84, 200, 0.1);
+      }
+
+      /* Post Card Styles */
+      .post-card {
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: var(--transition);
+      }
+
+      .post-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .post-card p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.6;
+        color: var(--text-color);
+      }
+
+      .post-card small {
+        color: var(--light-text);
+        font-size: 14px;
+      }
+
+      .post-card h3 {
+        margin-top: 20px;
+        margin-bottom: 10px;
+        font-size: 18px;
+        color: var(--primary-color);
+      }
+
+      /* Comment Card Styles */
+      .comment-card {
+        background-color: var(--background-color);
+        border-left: 3px solid var(--primary-color);
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        transition: var(--transition);
+      }
+
+      .comment-card:hover {
+        transform: translateX(5px);
+      }
+
+      .comment-card p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-color);
+      }
+
+      .comment-card small {
+        color: var(--light-text);
+        font-size: 12px;
+      }
+
+      /* Form Styles */
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(78, 84, 200, 0.2);
+        border-radius: 10px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        resize: vertical;
+        font-family: 'Poppins', sans-serif;
+        transition: var(--transition);
+      }
+
+      textarea:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.1);
+        outline: none;
+      }
+
+      button {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(42, 57, 144, 0.2);
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+      }
+
+      button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.6s;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(42, 57, 144, 0.3);
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      /* No Posts Message */
+      .no-posts {
+        text-align: center;
+        color: var(--light-text);
+        font-size: 16px;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: var(--card-color);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+      }
+
+      /* Go Back Button */
+      .go-back-button {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        box-shadow: none;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .go-back-button::before {
+        content: '\f060';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-right: 8px;
+        font-size: 14px;
+      }
+
+      .go-back-button:hover {
+        background: rgba(42, 57, 144, 0.05);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(42, 57, 144, 0.1);
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      main, button {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
         header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        header img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-bottom: 10px;
+          padding: 15px;
         }
 
         header h1 {
-            margin: 0;
-            font-size: 24px;
+          font-size: 24px;
         }
 
         main {
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
+          padding: 15px;
         }
 
         h2 {
-            color: #4CAF50;
-            margin-bottom: 20px;
+          font-size: 20px;
         }
 
-        /* Post Card Styles */
-        .post-card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .post-card p {
-            margin: 0;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
-        .post-card small {
-            color: #777;
-            font-size: 14px;
-        }
-
-        .post-card h3 {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            font-size: 18px;
-            color: #555;
-        }
-
-        .comment-card {
-            background-color: #f9f9f9;
-            border-left: 3px solid #4CAF50;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-
-        .comment-card p {
-            margin: 0;
-            font-size: 14px;
-        }
-
-        .comment-card small {
-            color: #999;
-            font-size: 12px;
-        }
-
-        /* Form Styles */
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-bottom: 10px;
-            resize: vertical;
+        .post-card, .comment-card {
+          padding: 15px;
         }
 
         button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
+          width: 100%;
+          margin: 5px 0;
         }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* No Posts Message */
-        .no-posts {
-            text-align: center;
-            color: #777;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-
-        /* Go Back Button */
-        .go-back-button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .go-back-button:hover {
-            background-color: #45a049;
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <img src="/uploads/<%= profilePic %>" alt="Profile Picture" onclick="window.location.href='/dashboard/<%= userId %>'">
-        <h1>Welcome to the Community, <%= username %>!</h1>
+      <img src="/uploads/<%= profilePic %>" alt="Profile Picture" onclick="window.location.href='/dashboard/<%= userId %>'" />
+      <h1>Welcome to the Community, <%= username %>!</h1>
     </header>
 
     <main>
-        <!-- Go Back to Home Button -->
-        
+      <!-- Go Back to Home Button -->
+      <button class="go-back-button" onclick="window.location.href='/home/<%= userId %>'">Go Back to Home</button>
 
-        <!-- Start a New Discussion -->
-        <h2>Start a New Discussion</h2>
-        <form action="/create-post/<%= userId %>" method="POST">
-            <textarea name="content" rows="4" placeholder="Share your thoughts..."></textarea>
-            <br>
-            <button type="submit">Post</button>
-        </form>
+      <!-- Start a New Discussion -->
+      <h2><i class="fas fa-comment-dots"></i> Start a New Discussion</h2>
+      <form action="/create-post/<%= userId %>" method="POST">
+        <textarea name="content" rows="4" placeholder="Share your thoughts..."></textarea>
+        <br />
+        <button type="submit"><i class="fas fa-paper-plane"></i> Post</button>
+      </form>
 
-        <!-- Recent Discussions -->
-        <h2>Recent Discussions</h2>
-        <div id="forum-posts">
-            <% if (posts.length > 0) { %>
-                <% posts.forEach(post => { %>
-                    <div class="post-card">
-                        <p><strong><%= post.username %>:</strong> <%= post.content %></p>
-                        <small>Posted on: <%= post.createdAt.toLocaleString() %></small>
-                        <h3>Comments:</h3>
-                        <% if (post.comments.length > 0) { %>
-                            <% post.comments.forEach(comment => { %>
-                                <div class="comment-card">
-                                    <p><strong><%= comment.username %>:</strong> <%= comment.content %></p>
-                                    <small>Commented on: <%= comment.createdAt.toLocaleString() %></small>
-                                </div>
-                            <% }) %>
-                        <% } else { %>
-                            <p>No comments yet.</p>
-                        <% } %>
-                        <form action="/add-comment/<%= post._id %>/<%= userId %>" method="POST">
-                            <textarea name="comment" rows="2" placeholder="Add a comment..."></textarea>
-                            <br>
-                            <button type="submit">Comment</button>
-                        </form>
-                    </div>
+      <!-- Recent Discussions -->
+      <h2><i class="fas fa-comments"></i> Recent Discussions</h2>
+      <div id="forum-posts">
+        <% if (posts.length > 0) { %>
+          <% posts.forEach(post => { %>
+            <div class="post-card">
+              <p><strong><%= post.username %>:</strong> <%= post.content %></p>
+              <small>Posted on: <%= post.createdAt.toLocaleString() %></small>
+              <h3><i class="fas fa-comment"></i> Comments:</h3>
+              <% if (post.comments.length > 0) { %>
+                <% post.comments.forEach(comment => { %>
+                  <div class="comment-card">
+                    <p><strong><%= comment.username %>:</strong> <%= comment.content %></p>
+                    <small>Commented on: <%= comment.createdAt.toLocaleString() %></small>
+                  </div>
                 <% }) %>
-            <% } else { %>
-                <p class="no-posts">No posts yet. Be the first to share!</p>
-            <% } %>
-        </div>
-        <button class="go-back-button" onclick="window.location.href='/home/<%= userId %>'">Go Back to Home</button>
+              <% } else { %>
+                <p>No comments yet.</p>
+              <% } %>
+              <form action="/add-comment/<%= post._id %>/<%= userId %>" method="POST">
+                <textarea name="comment" rows="2" placeholder="Add a comment..."></textarea>
+                <br />
+                <button type="submit"><i class="fas fa-reply"></i> Comment</button>
+              </form>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <p class="no-posts">No posts yet. Be the first to share!</p>
+        <% } %>
+      </div>
     </main>
-   
-</body>
+  </body>
 </html>

@@ -1,28 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Signup</title>
-</head>
-<body>
-    <h2>Signup Form</h2>
-    <form action="/api/auth/signup" method="POST" enctype="multipart/form-data">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+      :root {
+        --primary-color: #2a3990; /* Dark blue */
+        --secondary-color: #4e54c8; /* Purple */
+        --accent-color: #ff6b6b; /* Coral red */
+        --background-color: #f8f9ff; /* Light background */
+        --card-color: #ffffff; /* White */
+        --text-color: #333344; /* Dark text */
+        --light-text: #7b7b8f; /* Light gray text */
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Soft shadow */
+        --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12); /* Hover shadow */
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth transition */
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Signup Container */
+      .signup-container {
+        background-color: var(--card-color);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 40px;
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        transition: var(--transition);
+      }
+
+      .signup-container:hover {
+        box-shadow: var(--hover-shadow);
+      }
+
+      .signup-container h2 {
+        font-size: 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+        position: relative;
+        display: inline-block;
+      }
+
+      .signup-container h2::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+      }
+
+      .signup-container p {
+        color: var(--light-text);
+        margin-bottom: 30px;
+      }
+
+      .signup-container a {
+        color: var(--secondary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+      }
+
+      .signup-container a:hover {
+        color: var(--primary-color);
+        text-decoration: underline;
+      }
+
+      /* Form Styles */
+      .signup-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .signup-form label {
+        color: var(--text-color);
+        font-size: 14px;
+        font-weight: 500;
+        text-align: left;
+      }
+
+      .signup-form input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid rgba(78, 84, 200, 0.2);
+        border-radius: 10px;
+        background-color: var(--card-color);
+        color: var(--text-color);
+        font-size: 14px;
+        outline: none;
+        transition: var(--transition);
+      }
+
+      .signup-form input::placeholder {
+        color: var(--light-text);
+      }
+
+      .signup-form input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(42, 57, 144, 0.1);
+      }
+
+      .signup-form input[type='file'] {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .signup-form button {
+        padding: 12px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .signup-form button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.6s;
+      }
+
+      .signup-form button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(42, 57, 144, 0.3);
+      }
+
+      .signup-form button:hover::before {
+        left: 100%;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 480px) {
+        .signup-container {
+          padding: 20px;
+        }
+
+        .signup-container h2 {
+          font-size: 24px;
+        }
+
+        .signup-form input {
+          padding: 10px;
+        }
+
+        .signup-form button {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="signup-container">
+      <h2>Signup</h2>
+      <p>Create your account to get started.</p>
+
+      <form class="signup-form" action="/api/auth/signup" method="POST" enctype="multipart/form-data">
         <label for="username">Username:</label>
-        <input type="text" name="username" required>
+        <input type="text" name="username" placeholder="Enter your username" required />
 
         <label for="email">Email:</label>
-        <input type="email" name="email" required>
+        <input type="email" name="email" placeholder="Enter your email" required />
 
         <label for="password">Password:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password" placeholder="Enter your password" required />
 
         <label for="profilePic">Profile Picture:</label>
-        <input type="file" name="profilePic" accept="image/*" required> <!-- Making profile picture mandatory -->
+        <input type="file" name="profilePic" accept="image/*" required />
 
         <button type="submit">Signup</button>
-    </form>
+      </form>
 
-    <p>Already have an account? <a href="/login">Login here</a></p> <!-- Link to login page -->
-</body>
+      <p>Already have an account? <a href="/login">Login here</a></p>
+    </div>
+  </body>
 </html>

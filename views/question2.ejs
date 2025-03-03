@@ -1,107 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Question 2</title>
-    <style>
-        .multiselect {
-            width: 200px;
-            position: relative;
-            display: inline-block;
-        }
-        .multiselect .selectBox {
-            position: relative;
-        }
-        .multiselect .selectBox select {
-            width: 100%;
-            height: 35px;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .multiselect .overSelect {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-        }
-        .multiselect .checkboxes {
-            display: none;
-            border: 1px #dadada solid;
-            position: absolute;
-            background-color: white;
-            z-index: 1;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .multiselect .checkboxes label {
-            display: block;
-        }
-        .multiselect .checkboxes label:hover {
-            background-color: #f1f1f1;
-        }
-        .error-message {
-            color: red;
-            display: none;
-            border: 1px solid red;
-            background-color: #f8d7da;
-            padding: 10px;
-            margin-top: 10px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career Assessment - Question 2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --primary-color: #2a3990;
+      --secondary-color: #4e54c8;
+      --accent-color: #ff6b6b;
+      --background-color: #f8f9ff;
+      --card-color: #ffffff;
+      --text-color: #333344;
+      --light-text: #7b7b8f;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header styles */
+    header {
+      background-color: var(--card-color);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      box-shadow: var(--shadow);
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    header:hover {
+      box-shadow: var(--hover-shadow);
+    }
+
+    .logo {
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--primary-color);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Main content styles */
+    main {
+      max-width: 800px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 60px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .assessment-card {
+      background-color: var(--card-color);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .assessment-card h2 {
+      color: var(--primary-color);
+      margin-bottom: 30px;
+      font-size: 28px;
+      position: relative;
+      padding-bottom: 15px;
+      display: inline-block;
+    }
+
+    .assessment-card h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+
+    .assessment-card p {
+      color: var(--light-text);
+      margin-bottom: 25px;
+    }
+
+    .assessment-form {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      color: var(--text-color);
+      font-size: 18px;
+    }
+
+    /* Multiselect styles */
+    .multiselect {
+      width: 100%;
+      position: relative;
+    }
+
+    .multiselect .selectBox {
+      position: relative;
+      width: 100%;
+    }
+
+    .multiselect .selectBox select {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e1e1f0;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 16px;
+      color: var(--text-color);
+      background-color: white;
+      transition: var(--transition);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232a3990' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      cursor: pointer;
+    }
+
+    .multiselect .selectBox select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(42, 57, 144, 0.1);
+    }
+
+    .multiselect .overSelect {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .multiselect .checkboxes {
+      display: none;
+      border: 2px solid #e1e1f0;
+      border-radius: 10px;
+      position: absolute;
+      background-color: white;
+      z-index: 1;
+      max-height: 200px;
+      overflow-y: auto;
+      width: 100%;
+      margin-top: 5px;
+      box-shadow: var(--shadow);
+    }
+
+    .multiselect .checkboxes label {
+      display: block;
+      padding: 12px 15px;
+      font-size: 16px;
+      transition: var(--transition);
+      margin: 0;
+      font-weight: 400;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .multiselect .checkboxes label:last-child {
+      border-bottom: none;
+    }
+
+    .multiselect .checkboxes label:hover {
+      background-color: rgba(78, 84, 200, 0.05);
+    }
+
+    .multiselect .checkboxes input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(1.2);
+      accent-color: var(--primary-color);
+    }
+
+    .error-message {
+      color: var(--accent-color);
+      display: none;
+      border: 1px solid var(--accent-color);
+      background-color: rgba(255, 107, 107, 0.1);
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      box-shadow: 0 4px 15px rgba(42, 57, 144, 0.2);
+      margin-top: 20px;
+    }
+
+    .button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: all 0.6s;
+      z-index: -1;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(42, 57, 144, 0.3);
+    }
+
+    .button:hover::before {
+      left: 100%;
+    }
+
+    .progress-container {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 40px;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background-color: #e1e1f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 50%;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 10px;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      color: var(--light-text);
+      font-size: 14px;
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      
+      .assessment-card {
+        padding: 30px 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+      }
+      
+      .assessment-card h2 {
+        font-size: 24px;
+      }
+      
+      .form-group label {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <h2>Question 2: What are your skills?</h2>
-    <form action="/question3" method="POST" onsubmit="return validateCheckboxes()">
+  <header>
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-rocket"></i>
+      </div>
+      CareerPath
+    </a>
+  </header>
+
+  <main>
+    <div class="progress-container">
+      <div class="progress-bar-container">
+        <div class="progress-bar"></div>
+      </div>
+      <div class="progress-text">
+        <span>Question 2 of 4</span>
+        <span>50% Complete</span>
+      </div>
+    </div>
+
+    <div class="assessment-card">
+      <h2>What are your skills?</h2>
+      <p>Select all relevant skills to help us match you with the best career opportunities.</p>
+      
+      <form action="/question3" method="POST" class="assessment-form" onsubmit="return validateCheckboxes()">
         <input type="hidden" name="userId" value="<%= userId %>">
         <input type="hidden" name="qualification" value="<%= qualification %>">
-        <label for="skills">Skills:</label>
-        <div class="multiselect">
+        
+        <div class="form-group">
+          <label for="skills">Skills:</label>
+          <div class="multiselect">
             <div class="selectBox" onclick="showCheckboxes()">
-                <select>
-                    <option value="">Select your skills</option>
-                </select>
-                <div class="overSelect"></div>
+              <select>
+                <option value="">Select your skills</option>
+              </select>
+              <div class="overSelect"></div>
             </div>
             <div id="checkboxes" class="checkboxes">
-                <label for="skill1"><input type="checkbox" id="skill1" name="skills" value="JavaScript"> JavaScript</label>
-                <label for="skill2"><input type="checkbox" id="skill2" name="skills" value="Python"> Python</label>
-                <label for="skill3"><input type="checkbox" id="skill3" name="skills" value="Java"> Java</label>
-                <label for="skill4"><input type="checkbox" id="skill4" name="skills" value="React"> React</label>
-                <label for="skill5"><input type="checkbox" id="skill5" name="skills" value="Nothing"> Nothing</label>
-                <!-- Add more skills as needed -->
+              <label for="skill1"><input type="checkbox" id="skill1" name="skills" value="JavaScript"> JavaScript</label>
+              <label for="skill2"><input type="checkbox" id="skill2" name="skills" value="Python"> Python</label>
+              <label for="skill3"><input type="checkbox" id="skill3" name="skills" value="Java"> Java</label>
+              <label for="skill4"><input type="checkbox" id="skill4" name="skills" value="React"> React</label>
+              <label for="skill5"><input type="checkbox" id="skill5" name="skills" value="Angular"> Angular</label>
+              <label for="skill6"><input type="checkbox" id="skill6" name="skills" value="Node.js"> Node.js</label>
+              <label for="skill7"><input type="checkbox" id="skill7" name="skills" value="SQL"> SQL</label>
+              <label for="skill8"><input type="checkbox" id="skill8" name="skills" value="Machine Learning"> Machine Learning</label>
+              <label for="skill9"><input type="checkbox" id="skill9" name="skills" value="Data Analysis"> Data Analysis</label>
+              <label for="skill10"><input type="checkbox" id="skill10" name="skills" value="Nothing"> Nothing</label>
             </div>
-            <div id="error-message" class="error-message">Please select at least one skill.</div>
+          </div>
+          <div id="error-message" class="error-message">
+            Please select at least one skill to continue.
+          </div>
         </div>
-        <button type="submit">Next</button>
-    </form>
+        
+        <button type="submit" class="button">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </form>
+    </div>
+  </main>
 
-    <script>
-        function showCheckboxes() {
-            var checkboxes = document.getElementById("checkboxes");
-            if (checkboxes.style.display === "block") {
-                checkboxes.style.display = "none";
-            } else {
-                checkboxes.style.display = "block";
-            }
-        }
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 CareerPath. All Rights Reserved.</p>
+    </div>
+  </footer>
 
-        function validateCheckboxes() {
-            var checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
-            var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
-            var errorMessage = document.getElementById("error-message");
-            
-            if (!checkedOne) {
-                errorMessage.style.display = "block";
-            } else {
-                errorMessage.style.display = "none";
-            }
-            
-            return checkedOne;
-        }
-    </script>
+  <script>
+    function showCheckboxes() {
+      var checkboxes = document.getElementById("checkboxes");
+      if (checkboxes.style.display === "block") {
+        checkboxes.style.display = "none";
+      } else {
+        checkboxes.style.display = "block";
+      }
+    }
+
+    function validateCheckboxes() {
+      var checkboxes = document.querySelectorAll('.checkboxes input[type="checkbox"]');
+      var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+      var errorMessage = document.getElementById("error-message");
+      
+      if (!checkedOne) {
+        errorMessage.style.display = "block";
+      } else {
+        errorMessage.style.display = "none";
+      }
+      
+      return checkedOne;
+    }
+
+    // Close checkboxes when clicking outside
+    document.addEventListener('click', function(event) {
+      var multiselect = document.querySelector('.multiselect');
+      var checkboxes = document.getElementById("checkboxes");
+      
+      if (!multiselect.contains(event.target) && checkboxes.style.display === "block") {
+        checkboxes.style.display = "none";
+      }
+    });
+  </script>
 </body>
 </html>

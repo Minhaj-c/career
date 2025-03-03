@@ -1,41 +1,737 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
+    <title>Dashboard - CareerPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+      
+      :root {
+        --primary-color: #2a3990;
+        --secondary-color: #4e54c8;
+        --accent-color: #ff6b6b;
+        --background-color: #f8f9ff;
+        --card-color: #ffffff;
+        --text-color: #333344;
+        --light-text: #7b7b8f;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
+
+      /* Header styles */
+      header {
+        background-color: var(--card-color);
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        box-shadow: var(--shadow);
+        z-index: 1000;
+        transition: var(--transition);
+      }
+
+      header:hover {
+        box-shadow: var(--hover-shadow);
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logo {
+        font-weight: 700;
+        font-size: 24px;
+        color: var(--primary-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .profile-pic-container {
+        position: relative;
+        display: inline-block;
+      }
+
+      .profile-pic {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: var(--transition);
+        object-fit: cover;
+      }
+
+      .profile-pic:hover {
+        border-color: var(--accent-color);
+        transform: scale(1.05);
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: var(--card-color);
+        min-width: 200px;
+        box-shadow: var(--shadow);
+        z-index: 1;
+        border-radius: 12px;
+        overflow: hidden;
+        transform: translateY(10px);
+        opacity: 0;
+        transition: var(--transition);
+      }
+
+      .profile-pic-container:hover .dropdown-content {
+        display: block;
+        transform: translateY(0);
+        opacity: 1;
+        animation: fadeIn 0.3s ease-out forwards;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .dropdown-content a {
+        color: var(--text-color);
+        padding: 12px 20px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: var(--transition);
+      }
+
+      .dropdown-content a:hover {
+        background-color: rgba(78, 84, 200, 0.1);
+        color: var(--primary-color);
+      }
+
+      .dropdown-content a i {
+        color: var(--primary-color);
+        width: 20px;
+        text-align: center;
+      }
+
+      .welcome-text {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .welcome-text h1 {
+        font-size: 18px;
+        margin: 0;
+        color: var(--text-color);
+        font-weight: 600;
+      }
+
+      .welcome-text h2 {
+        font-size: 14px;
+        font-weight: 400;
+        margin: 0;
+        color: var(--light-text);
+      }
+
+      /* Main content styles */
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .dashboard-header {
+        text-align: center;
+        margin-bottom: 60px;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .dashboard-header h1 {
+        font-size: 36px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        position: relative;
+        display: inline-block;
+      }
+
+      .dashboard-header h1::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        border-radius: 2px;
+      }
+
+      .user-profile-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 40px;
+      }
+
+      .profile-img-container {
+        position: relative;
+        margin-bottom: 30px;
+      }
+
+      .user-profile-pic {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid white;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+      }
+
+      .user-profile-pic:hover {
+        transform: scale(1.05);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .edit-profile-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: var(--accent-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .edit-profile-icon:hover {
+        transform: scale(1.1);
+        background: var(--primary-color);
+      }
+
+      .user-info {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .user-info h2 {
+        color: var(--primary-color);
+        margin-bottom: 5px;
+        font-size: 24px;
+      }
+
+      .user-info p {
+        color: var(--light-text);
+        font-size: 16px;
+      }
+
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+        margin-top: 50px;
+      }
+
+      .dashboard-card {
+        background-color: var(--card-color);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        text-align: center;
+        padding: 40px 25px;
+        transition: var(--transition);
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 0;
+        background: linear-gradient(135deg, rgba(42, 57, 144, 0.03), rgba(78, 84, 200, 0.05));
+        transition: var(--transition);
+        z-index: -1;
+      }
+
+      .dashboard-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--hover-shadow);
+      }
+
+      .dashboard-card:hover::before {
+        height: 100%;
+      }
+
+      .dashboard-icon {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, rgba(42, 57, 144, 0.1), rgba(78, 84, 200, 0.1));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+        transition: var(--transition);
+      }
+
+      .dashboard-card:hover .dashboard-icon {
+        transform: scale(1.1) rotate(5deg);
+        background: linear-gradient(135deg, rgba(42, 57, 144, 0.15), rgba(78, 84, 200, 0.15));
+      }
+
+      .dashboard-icon i {
+        font-size: 24px;
+        color: var(--primary-color);
+        transition: var(--transition);
+      }
+
+      .dashboard-card:hover .dashboard-icon i {
+        transform: scale(1.1);
+      }
+
+      .dashboard-card h3 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+
+      .dashboard-card p {
+        color: var(--light-text);
+        margin-bottom: 25px;
+        flex-grow: 1;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        box-shadow: 0 4px 15px rgba(42, 57, 144, 0.2);
+      }
+
+      .button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: all 0.6s;
+        z-index: -1;
+      }
+
+      .button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(42, 57, 144, 0.3);
+      }
+
+      .button:hover::before {
+        left: 100%;
+      }
+
+      .button.outline {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        box-shadow: none;
+      }
+
+      .button.outline:hover {
+        background: rgba(42, 57, 144, 0.05);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(42, 57, 144, 0.1);
+      }
+
+      /* Footer styles */
+      footer {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 50px 20px 30px;
+        margin-top: 80px;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+      }
+
+      .footer-column h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .footer-column h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--accent-color);
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .footer-links a:hover {
+        color: white;
+        transform: translateX(5px);
+      }
+
+      .footer-links a i {
+        font-size: 14px;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-links a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: white;
+        transition: var(--transition);
+      }
+
+      .social-links a:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-3px);
+      }
+
+      .footer-bottom {
+        max-width: 1200px;
+        margin: 40px auto 0;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+      }
+
+      /* Responsive design */
+      @media (max-width: 1024px) {
+        .dashboard-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .header-content {
+          gap: 10px;
+        }
+        
+        .welcome-text h1 {
+          font-size: 16px;
+        }
+        
+        .welcome-text h2 {
+          font-size: 12px;
+        }
+        
+        .dashboard-header h1 {
+          font-size: 30px;
+        }
+        
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        header {
+          padding: 15px;
+          flex-direction: column;
+          gap: 15px;
+        }
+        
+        .dashboard-header h1 {
+          font-size: 24px;
+        }
+        
+        .user-profile-pic {
+          width: 120px;
+          height: 120px;
+        }
+      }
+
+      /* Dark mode */
+      .dark-mode {
+        --background-color: #1a1a2e;
+        --card-color: #252541;
+        --text-color: #e6e6f2;
+        --light-text: #9999b8;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+    </style>
   </head>
   <body>
     <header>
-      <img
-        src="/uploads/<%= profilePic %>"
-        alt="Profile Picture"
-        style="width: 100px; height: 100px; border-radius: 50%"
-      />
-      <h1>Dashboard - <%= username %></h1>
-      <a href="/logout">Logout</a>
+      <div class="header-content">
+        <a href="/" class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-rocket"></i>
+          </div>
+          CareerPath
+        </a>
+        <div class="profile-pic-container">
+          <img
+            src="/uploads/<%= profilePic %>"
+            alt="Profile Picture"
+            class="profile-pic"
+          />
+          <span class="notification-dot"></span>
+          <div class="dropdown-content">
+            <a href="/home/<%= userId %>"><i class="fas fa-home"></i> Home</a>
+            <a href="/dashboard/<%= userId %>"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="/edit-profile/<%= userId %>"><i class="fas fa-user-edit"></i> Edit Profile</a>
+            <a href="/notifications/<%= userId %>"><i class="fas fa-bell"></i> Notifications</a>
+            <a href="/settings/<%= userId %>"><i class="fas fa-cog"></i> Settings</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
+        </div>
+        <div class="welcome-text">
+          <h1>Welcome, <%= username %>!</h1>
+          <h2>Your career journey dashboard</h2>
+        </div>
+      </div>
     </header>
 
     <main>
-      <p>Email: <%= email %></p>
-      <p>Username: <%= username %></p>
+      <div class="dashboard-header">
+        <h1>YOUR DASHBOARD</h1>
+      </div>
 
-      <h3>Edit Profile</h3>
-      <button onclick="window.location.href='/edit-profile/<%= userId %>'">
-        Go to Edit Profile
-      </button>
+      <div class="user-profile-section">
+        <div class="profile-img-container">
+          <img
+            src="/uploads/<%= profilePic %>"
+            alt="Profile Picture"
+            class="user-profile-pic"
+          />
+          <a href="/edit-profile/<%= userId %>" class="edit-profile-icon">
+            <i class="fas fa-pencil-alt"></i>
+          </a>
+        </div>
+        <div class="user-info">
+          <h2><%= username %></h2>
+          <p><%= email %></p>
+        </div>
+        <a href="/edit-profile/<%= userId %>" class="button">Edit Profile</a>
+      </div>
 
-      <h3>Skills and Qualifications</h3>
-      <button
-        onclick="window.location.href='/skills-qualifications/<%= userId %>'"
-      >
-        View Skills and Qualifications
-      </button>
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <div class="dashboard-icon">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <h3>PROFILE COMPLETION</h3>
+          <p>Update your profile information to help us provide better career recommendations.</p>
+          <a href="/edit-profile/<%= userId %>" class="button">Complete Profile</a>
+        </div>
 
-      <h3>Go Back</h3>
-      <button onclick="window.location.href='/home/<%= userId %>'">
-        Go Back to Home
-      </button>
+        <div class="dashboard-card">
+          <div class="dashboard-icon">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <h3>SKILLS & QUALIFICATIONS</h3>
+          <p>View and manage your skills, education, and professional qualifications.</p>
+          <a href="/skills-qualifications/<%= userId %>" class="button">Manage Skills</a>
+        </div>
+
+       
+
+        <div class="dashboard-card">
+          <div class="dashboard-icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <h3>BACK TO HOME</h3>
+          <p>Return to the main page to explore career paths, resources, and community features.</p>
+          <a href="/home/<%= userId %>" class="button outline">Go to Home</a>
+        </div>
+      </div>
     </main>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>About Us</h3>
+          <ul class="footer-links">
+            <li><a href="/about"><i class="fas fa-angle-right"></i> Our Mission</a></li>
+            <li><a href="/team"><i class="fas fa-angle-right"></i> Our Team</a></li>
+            <li><a href="/careers"><i class="fas fa-angle-right"></i> Careers</a></li>
+            <li><a href="/press"><i class="fas fa-angle-right"></i> Press</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Resources</h3>
+          <ul class="footer-links">
+            <li><a href="/blog"><i class="fas fa-angle-right"></i> Blog</a></li>
+            <li><a href="/guides"><i class="fas fa-angle-right"></i> Career Guides</a></li>
+            <li><a href="/templates"><i class="fas fa-angle-right"></i> Resume Templates</a></li>
+            <li><a href="/faq"><i class="fas fa-angle-right"></i> FAQ</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Support</h3>
+          <ul class="footer-links">
+            <li><a href="/contact"><i class="fas fa-angle-right"></i> Contact Us</a></li>
+            <li><a href="/help"><i class="fas fa-angle-right"></i> Help Center</a></li>
+            <li><a href="/feedback"><i class="fas fa-angle-right"></i> Feedback</a></li>
+            <li><a href="/report-issue"><i class="fas fa-angle-right"></i> Report an Issue</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>Connect With Us</h3>
+          <p>Stay updated with the latest career opportunities and resources</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2025 CareerPath. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      // Add animation to cards on scroll
+      document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.dashboard-card');
+        
+        function checkScroll() {
+          cards.forEach((card, index) => {
+            const cardTop = card.getBoundingClientRect().top;
+            const windowHeight = window.innerHeight;
+            
+            if (cardTop < windowHeight * 0.9) {
+              setTimeout(() => {
+                card.classList.add('animate-card');
+              }, index * 100);
+            }
+          });
+        }
+        
+        // Initial check
+        checkScroll();
+        
+        // Check on scroll
+        window.addEventListener('scroll', checkScroll);
+      });
+    </script>
   </body>
 </html>
