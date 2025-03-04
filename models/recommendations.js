@@ -133,10 +133,10 @@ export const recommendations = {
       }
     }
   },
-  "Graduate": {
+  "+2": {
     "Java": {
       "Web Development": {
-        "Cybersecurity": [
+        "Reading": [
           {
             courses: ["Java for Web Security", "Ethical Hacking"],
             jobs: ["Security Analyst", "Penetration Tester"],
@@ -168,7 +168,8 @@ export const recommendations = {
         ]
       }
     }
-  }
+  },
+
 };
 
 // Add course information
