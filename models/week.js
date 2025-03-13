@@ -1579,5 +1579,667 @@ export const weeklyContent = {
           }
         }
       ]
-    }
-  };
+    },
+      "Game Developer": {
+        weeks: [
+          {
+            title: "Python Basics for Game Development",
+            description: "Learn the fundamentals of Python programming and its application in game development.",
+            tasks: [
+              "Install Python and set up the development environment",
+              "Learn Python syntax and basic data types",
+              "Understand control structures (if-else, loops)",
+              "Practice functions and modules",
+              "Explore Python libraries for game development"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "Which Python library is commonly used for game development?",
+                  options: ["Pygame", "TensorFlow", "Django", "Flask"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the correct way to define a function in Python?",
+                  options: ["def myFunction():", "function myFunction():", "define myFunction():", "func myFunction():"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which data type is used to store a sequence of characters in Python?",
+                  options: ["int", "str", "float", "list"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "What does the 'import' keyword do in Python?",
+                  options: ["Exports a module", "Imports a module", "Defines a class", "Creates a function"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which loop is used to iterate over a sequence in Python?",
+                  options: ["for loop", "while loop", "do-while loop", "repeat loop"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the output of 'print(2 ** 3)' in Python?",
+                  options: ["6", "8", "9", "23"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which Python data structure is mutable and ordered?",
+                  options: ["tuple", "set", "list", "dict"],
+                  correctAnswer: 2
+                },
+                {
+                  question: "What is the purpose of the 'if __name__ == '__main__':' statement?",
+                  options: ["To define a class", "To run code only when the script is executed directly", "To import a module", "To create a loop"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which operator is used for exponentiation in Python?",
+                  options: ["^", "**", "*", "//"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "What is the output of 'print(type(3.14))'?",
+                  options: ["int", "float", "str", "bool"],
+                  correctAnswer: 1
+                }
+              ]
+            }
+          },
+          {
+            title: "Introduction to Pygame",
+            description: "Learn the basics of the Pygame library and create a simple game window.",
+            tasks: [
+              "Install Pygame library",
+              "Create a Pygame window",
+              "Understand the game loop",
+              "Handle user input (keyboard and mouse)",
+              "Draw basic shapes and text on the screen"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is the first step to start using Pygame?",
+                  options: ["Import Pygame", "Define a class", "Create a loop", "Install Pygame"],
+                  correctAnswer: 3
+                },
+                {
+                  question: "Which Pygame function initializes all imported modules?",
+                  options: ["pygame.init()", "pygame.start()", "pygame.run()", "pygame.setup()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the game loop in Pygame?",
+                  options: ["To exit the game", "To handle events and update the game state", "To import modules", "To define variables"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which Pygame function is used to update the display?",
+                  options: ["pygame.display.update()", "pygame.update()", "pygame.refresh()", "pygame.show()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you handle keyboard events in Pygame?",
+                  options: ["pygame.key.get_pressed()", "pygame.event.get()", "pygame.input.keyboard()", "pygame.keyboard.event()"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which Pygame function is used to draw a rectangle?",
+                  options: ["pygame.draw.rect()", "pygame.rect()", "pygame.draw.rectangle()", "pygame.rectangle()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What does the 'pygame.QUIT' event represent?",
+                  options: ["User pressed a key", "User clicked the close button", "Game loop started", "Game loop ended"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which Pygame function is used to set the window title?",
+                  options: ["pygame.set_title()", "pygame.display.set_caption()", "pygame.window.title()", "pygame.title.set()"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "What is the default frame rate in Pygame?",
+                  options: ["30 FPS", "60 FPS", "No default frame rate", "120 FPS"],
+                  correctAnswer: 2
+                },
+                {
+                  question: "Which Pygame function is used to load an image?",
+                  options: ["pygame.image.load()", "pygame.load.image()", "pygame.load()", "pygame.image()"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          {
+            title: "Game Objects and Sprites",
+            description: "Learn how to create and manage game objects using Pygame sprites.",
+            tasks: [
+              "Understand the Sprite class in Pygame",
+              "Create custom game objects",
+              "Handle collisions between objects",
+              "Implement sprite groups",
+              "Animate sprites"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is a sprite in Pygame?",
+                  options: ["A background image", "A 2D object that can be animated", "A sound effect", "A font style"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which class is used to create custom sprites in Pygame?",
+                  options: ["pygame.Sprite", "pygame.Object", "pygame.GameObject", "pygame.Entity"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of sprite groups in Pygame?",
+                  options: ["To store multiple sprites", "To handle collisions", "To animate sprites", "To load images"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Pygame function checks for collisions between sprites?",
+                  options: ["pygame.sprite.collide()", "pygame.collision.check()", "pygame.sprite.collide_rect()", "pygame.collide.sprite()"],
+                  correctAnswer: 2
+                },
+                {
+                  question: "How do you add a sprite to a group in Pygame?",
+                  options: ["group.add(sprite)", "sprite.add(group)", "group.append(sprite)", "sprite.append(group)"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the 'update()' method in a sprite class?",
+                  options: ["To draw the sprite", "To update the sprite's state", "To handle collisions", "To load images"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "Which Pygame function is used to draw all sprites in a group?",
+                  options: ["group.draw()", "sprite.draw()", "pygame.draw.group()", "pygame.sprite.draw()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the 'rect' attribute in a sprite?",
+                  options: ["To store the sprite's image", "To define the sprite's position and size", "To handle collisions", "To animate the sprite"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "How do you animate a sprite in Pygame?",
+                  options: ["By changing its image over time", "By moving its position", "By rotating it", "By scaling it"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Pygame function is used to detect collisions between a sprite and a group?",
+                  options: ["pygame.sprite.spritecollide()", "pygame.collide.sprite()", "pygame.sprite.collide_group()", "pygame.group.collide()"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          {
+            title: "Game Physics and Movement",
+            description: "Learn how to implement basic game physics like gravity, velocity, and acceleration.",
+            tasks: [
+              "Understand the concept of velocity and acceleration",
+              "Implement gravity in a game",
+              "Create smooth movement for game objects",
+              "Handle object boundaries and screen wrapping",
+              "Add friction and damping effects"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is velocity in the context of game physics?",
+                  options: ["The speed of an object", "The direction of an object", "The acceleration of an object", "The mass of an object"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you simulate gravity in a game?",
+                  options: ["By increasing the y-velocity of an object", "By decreasing the x-velocity of an object", "By rotating the object", "By scaling the object"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of damping in game physics?",
+                  options: ["To increase speed", "To reduce velocity over time", "To add gravity", "To rotate objects"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "How do you prevent an object from moving outside the screen?",
+                  options: ["By resetting its position", "By reversing its velocity", "By clamping its position", "By deleting the object"],
+                  correctAnswer: 2
+                },
+                {
+                  question: "What is acceleration in game physics?",
+                  options: ["The rate of change of velocity", "The speed of an object", "The direction of an object", "The mass of an object"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which formula represents velocity?",
+                  options: ["v = d/t", "v = a*t", "v = m*a", "v = F/m"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of screen wrapping?",
+                  options: ["To make objects disappear", "To make objects reappear on the opposite side of the screen", "To stop objects at the screen edge", "To rotate objects"],
+                  correctAnswer: 1
+                },
+                {
+                  question: "How do you implement friction in a game?",
+                  options: ["By reducing velocity over time", "By increasing velocity over time", "By adding gravity", "By rotating the object"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the role of delta time in game physics?",
+                  options: ["To ensure consistent movement across different frame rates", "To increase speed", "To add gravity", "To rotate objects"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Pygame function is used to get the time elapsed since the last frame?",
+                  options: ["pygame.time.get_ticks()", "pygame.time.delta()", "pygame.clock.tick()", "pygame.time.elapsed()"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          // Week 5
+          {
+            title: "Advanced Collision Detection",
+            description: "Learn advanced techniques for detecting and handling collisions in games.",
+            tasks: [
+              "Implement pixel-perfect collision detection",
+              "Handle collisions between circles and rectangles",
+              "Use masks for complex shapes",
+              "Optimize collision detection for performance",
+              "Add collision response (e.g., bouncing, sliding)"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is pixel-perfect collision detection?",
+                  options: ["Checking collisions at the pixel level", "Using rectangles for collisions", "Using circles for collisions", "Ignoring collisions"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Pygame function is used for pixel-perfect collision detection?",
+                  options: ["pygame.sprite.collide_mask()", "pygame.sprite.collide_rect()", "pygame.collide.pixel()", "pygame.mask.collide()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is a collision mask?",
+                  options: ["A 2D representation of an object's shape", "A rectangle around an object", "A circle around an object", "A texture for an object"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you optimize collision detection for performance?",
+                  options: ["By using spatial partitioning", "By checking every object against every other object", "By ignoring collisions", "By increasing the frame rate"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of collision response?",
+                  options: ["To determine what happens after a collision", "To detect collisions", "To ignore collisions", "To rotate objects"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which collision response makes objects bounce off each other?",
+                  options: ["Elastic collision", "Inelastic collision", "No collision", "Static collision"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the difference between AABB and circle collision detection?",
+                  options: ["AABB uses rectangles, circle uses radii", "AABB uses circles, circle uses rectangles", "AABB is slower", "Circle is less accurate"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is spatial partitioning?",
+                  options: ["Dividing the game space into smaller regions", "Ignoring collisions", "Using masks for collisions", "Increasing the frame rate"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Pygame function is used to create a mask from an image?",
+                  options: ["pygame.mask.from_surface()", "pygame.surface.to_mask()", "pygame.image.mask()", "pygame.mask.create()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the 'rect' attribute in collision detection?",
+                  options: ["To define the bounding box of an object", "To store the image of an object", "To handle animations", "To rotate objects"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          // Week 6
+          {
+            title: "Game State Management",
+            description: "Learn how to manage different game states like menus, gameplay, and game over screens.",
+            tasks: [
+              "Create a game state manager",
+              "Implement a main menu",
+              "Add a pause screen",
+              "Handle transitions between states",
+              "Save and load game progress"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is a game state?",
+                  options: ["A specific mode or screen in a game", "The speed of the game", "The graphics of the game", "The sound effects of the game"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which design pattern is commonly used for game state management?",
+                  options: ["State pattern", "Singleton pattern", "Observer pattern", "Factory pattern"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you transition between game states?",
+                  options: ["By changing the current state variable", "By restarting the game", "By pausing the game", "By ignoring states"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of a main menu in a game?",
+                  options: ["To allow players to start or quit the game", "To display the game score", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you implement a pause screen?",
+                  options: ["By freezing the game loop", "By restarting the game", "By ignoring input", "By deleting objects"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of saving game progress?",
+                  options: ["To allow players to continue later", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Python module is commonly used for saving game data?",
+                  options: ["pickle", "json", "csv", "sqlite3"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of a game state manager?",
+                  options: ["To handle transitions between states", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you handle input in different game states?",
+                  options: ["By checking the current state", "By ignoring input", "By restarting the game", "By deleting objects"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of a game over screen?",
+                  options: ["To indicate the end of the game", "To start the game", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          // Week 7
+          {
+            title: "Sound and Music in Games",
+            description: "Learn how to add sound effects and background music to your game.",
+            tasks: [
+              "Load and play sound effects",
+              "Add background music",
+              "Control volume and playback",
+              "Handle sound events (e.g., collisions, button clicks)",
+              "Optimize audio performance"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "Which Pygame module is used for sound?",
+                  options: ["pygame.mixer", "pygame.sound", "pygame.audio", "pygame.music"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you load a sound effect in Pygame?",
+                  options: ["pygame.mixer.Sound()", "pygame.sound.load()", "pygame.audio.load()", "pygame.music.load()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of background music in a game?",
+                  options: ["To enhance the atmosphere", "To handle collisions", "To animate sprites", "To increase the game speed"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you play background music in Pygame?",
+                  options: ["pygame.mixer.music.play()", "pygame.sound.play()", "pygame.audio.play()", "pygame.music.play()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you control the volume of a sound effect?",
+                  options: ["sound.set_volume()", "sound.volume()", "sound.adjust_volume()", "sound.change_volume()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the 'pygame.mixer.init()' function?",
+                  options: ["To initialize the sound system", "To load a sound", "To play a sound", "To stop a sound"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you stop background music in Pygame?",
+                  options: ["pygame.mixer.music.stop()", "pygame.sound.stop()", "pygame.audio.stop()", "pygame.music.stop()"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of sound events in a game?",
+                  options: ["To trigger sounds based on game actions", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you optimize audio performance in a game?",
+                  options: ["By limiting the number of simultaneous sounds", "By increasing the volume", "By ignoring sound events", "By deleting sounds"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which file format is commonly used for game sounds?",
+                  options: ["WAV", "MP3", "OGG", "All of the above"],
+                  correctAnswer: 3
+                }
+              ]
+            }
+          },
+          // Week 8
+          {
+            title: "Game Design Patterns",
+            description: "Learn common game design patterns like Singleton, Observer, and Factory.",
+            tasks: [
+              "Understand the Singleton pattern",
+              "Implement the Observer pattern",
+              "Use the Factory pattern for object creation",
+              "Apply design patterns to game development",
+              "Optimize code structure using patterns"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is the Singleton pattern?",
+                  options: ["A design pattern that ensures a class has only one instance", "A pattern for creating objects", "A pattern for handling events", "A pattern for managing states"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the Observer pattern?",
+                  options: ["To notify objects of changes", "To create objects", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which pattern is used for creating objects without specifying the exact class?",
+                  options: ["Factory pattern", "Singleton pattern", "Observer pattern", "State pattern"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How does the Singleton pattern ensure a single instance?",
+                  options: ["By using a private constructor", "By creating multiple instances", "By ignoring instances", "By deleting instances"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the Factory pattern?",
+                  options: ["To create objects without specifying the exact class", "To handle events", "To manage states", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which pattern is used to manage game states?",
+                  options: ["State pattern", "Singleton pattern", "Observer pattern", "Factory pattern"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the benefit of using design patterns in game development?",
+                  options: ["To improve code structure and maintainability", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which pattern is used to handle events in a game?",
+                  options: ["Observer pattern", "Singleton pattern", "Factory pattern", "State pattern"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of the State pattern?",
+                  options: ["To manage different game states", "To create objects", "To handle events", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which pattern is used to ensure a single instance of a class?",
+                  options: ["Singleton pattern", "Observer pattern", "Factory pattern", "State pattern"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          // Week 9
+          {
+            title: "Multiplayer Game Development",
+            description: "Learn how to create multiplayer games using networking and synchronization.",
+            tasks: [
+              "Understand the basics of networking",
+              "Implement a simple multiplayer game",
+              "Handle player synchronization",
+              "Manage latency and lag",
+              "Add chat functionality"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "What is the purpose of networking in multiplayer games?",
+                  options: ["To connect players over a network", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which Python library is commonly used for networking?",
+                  options: ["socket", "requests", "http", "networking"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is player synchronization in multiplayer games?",
+                  options: ["Ensuring all players see the same game state", "Increasing the game speed", "Handling collisions", "Animating sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you handle latency in multiplayer games?",
+                  options: ["By predicting player movements", "By ignoring latency", "By increasing the frame rate", "By deleting players"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of a game server in multiplayer games?",
+                  options: ["To manage game state and player connections", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which protocol is commonly used for real-time multiplayer games?",
+                  options: ["UDP", "TCP", "HTTP", "FTP"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of a lobby in multiplayer games?",
+                  options: ["To allow players to join and wait for the game to start", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "How do you handle player disconnections in multiplayer games?",
+                  options: ["By removing the player from the game", "By ignoring the player", "By increasing the frame rate", "By deleting the game"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of chat functionality in multiplayer games?",
+                  options: ["To allow players to communicate", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which networking model is used for peer-to-peer games?",
+                  options: ["Decentralized", "Centralized", "Client-server", "Hybrid"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          },
+          // Week 10
+          {
+            title: "Deploying and Publishing Games",
+            description: "Learn how to package and publish your game for different platforms.",
+            tasks: [
+              "Package your game into an executable",
+              "Create an installer for your game",
+              "Publish your game on platforms like itch.io or Steam",
+              "Optimize your game for distribution",
+              "Add monetization strategies (e.g., ads, in-app purchases)"
+            ],
+            quiz: {
+              questions: [
+                {
+                  question: "Which tool is commonly used to package Python games into executables?",
+                  options: ["PyInstaller", "pip", "pygame", "setuptools"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of an installer for a game?",
+                  options: ["To make it easy for users to install the game", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which platform is commonly used to publish indie games?",
+                  options: ["itch.io", "GitHub", "PyPI", "Docker"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of optimizing a game for distribution?",
+                  options: ["To reduce file size and improve performance", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which monetization strategy involves showing ads in a game?",
+                  options: ["Ad-based", "In-app purchases", "Subscription", "Pay-to-play"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of a README file in a game project?",
+                  options: ["To provide instructions and information about the game", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which platform is commonly used to sell games?",
+                  options: ["Steam", "GitHub", "PyPI", "Docker"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "What is the purpose of version control in game development?",
+                  options: ["To track changes and collaborate with others", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                },
+                {
+                  question: "Which file format is commonly used for game assets?",
+                  options: ["PNG", "MP3", "WAV", "All of the above"],
+                  correctAnswer: 3
+                },
+                {
+                  question: "What is the purpose of a license file in a game project?",
+                  options: ["To define how the game can be used and distributed", "To increase the game speed", "To handle collisions", "To animate sprites"],
+                  correctAnswer: 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+          // Add more weeks here following the same structure...
+  
+    };
