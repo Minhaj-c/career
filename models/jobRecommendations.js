@@ -180,7 +180,83 @@ export const jobRecommendations = {
                 link: "https://www.figma.com/resources/learn-design/"
             }
         ]
+    },
+    'Game Developer': {
+  certifications: [
+    {
+      title: "Unity Certified Programmer",
+      description: "Validate your Unity skills and demonstrate your ability to develop interactive 2D/3D games.",
+      link: "https://unity.com/products/unity-certifications"
+    },
+    {
+      title: "Unreal Engine Certified Developer",
+      description: "Prove your expertise in Unreal Engine and game development with this official certification.",
+      link: "https://www.unrealengine.com/en-US/developer"
+    },
+    {
+      title: "Coursera Game Design and Development Specialization",
+      description: "Learn game design, development, and programming from Michigan State University.",
+      link: "https://www.coursera.org/specializations/game-development"
+    },
+    {
+      title: "Udemy Complete C# Unity Game Developer 3D",
+      description: "Master Unity and C# to create professional 3D games.",
+      link: "https://www.udemy.com/course/unitycourse2/"
     }
+  ],
+  freeResources: [
+    {
+      title: "Unity Learn",
+      description: "Free tutorials, projects, and courses for learning Unity game development.",
+      link: "https://learn.unity.com/"
+    },
+    {
+      title: "Unreal Engine Online Learning",
+      description: "Free resources and tutorials for learning Unreal Engine.",
+      link: "https://www.unrealengine.com/en-US/onlinelearning-courses"
+    },
+    {
+      title: "Godot Engine Documentation",
+      description: "Official documentation and tutorials for the open-source Godot Engine.",
+      link: "https://docs.godotengine.org/en/stable/"
+    },
+    {
+      title: "Brackeys YouTube Channel",
+      description: "Free Unity tutorials and game development tips from the Brackeys YouTube channel.",
+      link: "https://www.youtube.com/c/Brackeys"
+    },
+    {
+      title: "GameDev.tv Free Resources",
+      description: "Free tutorials and resources for learning game development with Unity and Unreal Engine.",
+      link: "https://www.gamedev.tv/p/free-resources"
+    },
+    {
+      title: "OpenGameArt",
+      description: "Free assets, sprites, and sounds for game development.",
+      link: "https://opengameart.org/"
+    },
+    {
+      title: "Kenney.nl",
+      description: "Free game assets, including 2D and 3D art, UI elements, and sound effects.",
+      link: "https://kenney.nl/assets"
+    },
+    {
+      title: "Itch.io Game Development Tools",
+      description: "Free and open-source tools for game development.",
+      link: "https://itch.io/game-development/tools/free"
+    },
+    {
+      title: "CS50's Introduction to Game Development (Harvard)",
+      description: "Free online course covering the fundamentals of game development.",
+      link: "https://cs50.harvard.edu/games/2018/"
+    },
+    {
+      title: "Game Development with Python and Pygame",
+      description: "Free tutorial series for building games with Python and Pygame.",
+      link: "https://realpython.com/pygame-a-primer/"
+    }
+  ]
+}
 };
 
 // Default recommendations for jobs not in the list
