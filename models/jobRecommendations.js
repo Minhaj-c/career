@@ -32,6 +32,77 @@ export const jobRecommendations = {
             }
         ]
     },
+    'Security Analyst': {
+        certifications: [
+          {
+            title: "Certified Information Systems Security Professional (CISSP)",
+            description: "Globally recognized certification for advanced cybersecurity professionals.",
+            link: "https://www.isc2.org/cissp"
+          },
+          {
+            title: "Certified Ethical Hacker (CEH)",
+            description: "Learn ethical hacking techniques and tools to identify vulnerabilities.",
+            link: "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/"
+          },
+          {
+            title: "CompTIA Security+",
+            description: "Entry-level certification covering foundational cybersecurity concepts.",
+            link: "https://www.comptia.org/certifications/security"
+          },
+          {
+            title: "Certified Information Security Manager (CISM)",
+            description: "Focuses on managing and governing enterprise information security programs.",
+            link: "https://www.isaca.org/credentialing/cism"
+          },
+          {
+            title: "Offensive Security Certified Professional (OSCP)",
+            description: "Hands-on certification for penetration testing and offensive security.",
+            link: "https://www.offensive-security.com/pwk-oscp/"
+          }
+        ],
+        freeResources: [
+            {
+                title:"Know more about security analyst",
+                description:"You can know more about security analyst",
+                link:"https://youtu.be/kVnvIBNiC58?si=42oy-2kUrhzPvRYx"
+            },
+          {
+            title: "Cybrary - Free Cybersecurity Courses",
+            description: "A wide range of free courses covering cybersecurity fundamentals and advanced topics.",
+            link: "https://www.cybrary.it/"
+          },
+          {
+            title: "Introduction to Cybersecurity by Cisco Networking Academy",
+            description: "Free course to learn the basics of cybersecurity and its importance.",
+            link: "https://www.netacad.com/courses/cybersecurity/introduction-cybersecurity"
+          },
+          {
+            title: "OWASP Web Security Testing Guide",
+            description: "Open-source guide to testing web applications for security vulnerabilities.",
+            link: "https://owasp.org/www-project-web-security-testing-guide/"
+          },
+          {
+            title: "Khan Academy - Cybersecurity",
+            description: "Introductory lessons on cybersecurity concepts and practices.",
+            link: "https://www.khanacademy.org/computing/computer-science/cybersecurity"
+          },
+          {
+            title: "SecurityTube - Free Video Tutorials",
+            description: "Free video tutorials on ethical hacking, penetration testing, and more.",
+            link: "http://www.securitytube.net/"
+          },
+          {
+            title: "TryHackMe",
+            description: "Interactive platform to learn cybersecurity through hands-on labs and challenges.",
+            link: "https://tryhackme.com/"
+          },
+          {
+            title: "Hack The Box",
+            description: "Online platform to practice penetration testing and cybersecurity skills.",
+            link: "https://www.hackthebox.com/"
+          }
+        ]
+      },
     'Data Analyst': {
         certifications: [
             {

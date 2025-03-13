@@ -1028,6 +1028,8 @@ app.get("/projects/:userId", async (req, res) => {
       userId: user._id,
       recommendedProjects,
       selectedJob,
+      profilePic: user.profilePic,
+
     });
   } catch (error) {
     console.error(
